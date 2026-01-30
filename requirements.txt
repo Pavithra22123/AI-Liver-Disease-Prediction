@@ -8,3 +8,4 @@ keras
 opencv-python
 pillow
 joblib
+reportlab
