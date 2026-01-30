@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Universal Scroll Fix */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 50px 20px;
+}
+
+/* Header Section */
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.page-header p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+}
+
+/* Contact Cards Container */
+.contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Contact Info Cards */
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.info-card-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+.info-card-icon i {
+    font-size: 32px;
+    color: white;
+}
+
+.info-card h4 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #ffc107;
+}
+
+.info-card p {
+    margin: 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 15px;
+}
+
+.info-card a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.info-card a:hover {
+    color: #ffc107;
+}
+
+/* Contact Form Card */
+.form-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.form-card h3 {
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-card h3 i {
+    color: #ffc107;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    color: #ffc107;
+    font-size: 14px;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffc107;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+    color: white;
+    outline: none;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Submit Button */
+.btn-submit {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 40px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 10px;
+    border: none;
+    margin-top: 20px;
+    padding: 15px 20px;
+    animation: slideDown 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: rgba(34, 197, 94, 0.2);
+    color: #bbf7d0;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* Back Button */
+.btn-back-container {
+    text-align: center;
+    margin-top: 40px;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 12px 35px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Map Section */
+.map-section {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.map-section h3 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.map-section h3 i {
+    color: #ffc107;
+}
+
+.map-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 60px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 36px;
+    }
+    
+    .form-card {
+        padding: 30px 20px;
+    }
+    
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+<div class="overlay">
+    <div class="contact-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-envelope"></i> Contact Us</h1>
+            <p>We're here to help! Reach out to us anytime</p>
+        </div>
+
+        <!-- Contact Info Cards -->
+        <div class="contact-info-grid">
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h4>Email Us</h4>
+                <p><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h4>Call Us</h4>
+                <p><a href="tel:{{ contact.phone }}">{{ contact.phone }}</a></p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h4>Visit Us</h4>
+                <p>{{ contact.address }}</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-card">
+            <h3>
+                <i class="fas fa-paper-plane"></i>
+                Send Us a Message
+            </h3>
+            <form method="POST" action="{{ url_for('contact') }}" id="contactForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user"></i>
+                                Your Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name"
+                                   placeholder="Enter your full name"
+                                   value="{{ request.form.name if request.method=='POST' else '' }}" 
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i>
+                                Your Email
+                            </label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email"
+                                   placeholder="Enter your email address"
+                                   value="{{ request.form.email if request.method=='POST' else '' }}" 
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject" class="form-label">
+                        <i class="fas fa-tag"></i>
+                        Subject
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="subject" 
+                           name="subject"
+                           placeholder="What is this regarding?"
+                           value="{{ request.form.subject if request.method=='POST' else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="form-label">
+                        <i class="fas fa-comment-dots"></i>
+                        Message
+                    </label>
+                    <textarea class="form-control" 
+                              id="message" 
+                              name="message" 
+                              rows="5"
+                              placeholder="Write your message here..."
+                              required>{{ request.form.message if request.method=='POST' else '' }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Message
+                </button>
+
+                {% if success %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    {{ success }}
+                </div>
+                {% elif error %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ error }}
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Map Section (Optional) -->
+        <div class="map-section">
+            <h3>
+                <i class="fas fa-location-arrow"></i>
+                Our Location
+            </h3>
+            <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt" style="font-size: 48px; opacity: 0.3;"></i>
+                <p style="margin-top: 15px;">{{ contact.address }}</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="btn-back-container">
+            <a href="{{ url_for('index') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-dismiss alerts after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-10px)';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+});
+
+// Form validation feedback
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        const submitBtn = contactForm.querySelector('.btn-submit');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+    });
+}
+
+// Add animation on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.info-card, .form-card, .map-section').forEach(el => {
+    observer.observe(el);
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

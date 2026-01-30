@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Appointment - LiverAI</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-header {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.page-header h2 {
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.page-header h2 i {
+    font-size: 32px;
+    color: #ffc107;
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.appointment-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.alert-info {
+    background: rgba(79, 172, 254, 0.2);
+    border: 1px solid rgba(79, 172, 254, 0.4);
+    color: #e0f2fe;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffc107;
+    outline: none;
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+select.form-control option {
+    background: #1a1a2e;
+    color: white;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.required {
+    color: #ef4444;
+    margin-left: 3px;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: white;
+    padding: 14px 40px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    font-size: 16px;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    transform: translateY(-2px);
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fecaca;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.record-info {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.record-info h5 {
+    color: #ffc107;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.info-value {
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h2>
+            <i class="fas fa-calendar-plus"></i>
+            Book Doctor Appointment
+        </h2>
+        <a href="{{ url_for('view_result', record_id=record['id']) }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <div class="appointment-card">
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="alert-info">
+            <strong><i class="fas fa-info-circle"></i> Important:</strong>
+            Based on your test results, we recommend scheduling an appointment with a specialist for proper diagnosis and treatment.
+        </div>
+
+        <!-- Test Result Summary -->
+        <div class="record-info">
+            <h5><i class="fas fa-file-medical"></i> Your Test Results</h5>
+            <div class="info-item">
+                <span class="info-label">Disease:</span>
+                <span class="info-value">{{ record['disease'] }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Risk Level:</span>
+                <span class="info-value">{{ record['risk'] }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Health Score:</span>
+                <span class="info-value">{{ record['health_score'] }}/100</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Test Date:</span>
+                <span class="info-value">{{ record['created_at'] }}</span>
+            </div>
+        </div>
+
+        <!-- Appointment Form -->
+        <form method="POST" id="appointmentForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-user"></i> Full Name <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control" name="patient_name" 
+                               value="{{ record['name'] }}" readonly required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-envelope"></i> Email <span class="required">*</span>
+                        </label>
+                        <input type="email" class="form-control" name="email" 
+                               value="{{ record['email'] }}" readonly required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-phone"></i> Phone Number <span class="required">*</span>
+                </label>
+                <input type="tel" class="form-control" name="phone" 
+                       value="{{ record['phone'] }}" required
+                       pattern="[0-9+\-\s()]*"
+                       placeholder="Enter your phone number">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-calendar"></i> Preferred Date <span class="required">*</span>
+                        </label>
+                        <input type="date" class="form-control" name="preferred_date" 
+                               id="appointmentDate" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-clock"></i> Preferred Time <span class="required">*</span>
+                        </label>
+                        <select class="form-control" name="preferred_time" required>
+                            <option value="">Select Time</option>
+                            <option value="09:00 AM">09:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
+                            <option value="03:00 PM">03:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
+                            <option value="05:00 PM">05:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-user-md"></i> Doctor Specialty <span class="required">*</span>
+                </label>
+                <select class="form-control" name="doctor_specialty" required>
+                    <option value="">Select Specialty</option>
+                    <option value="Hepatologist (Liver Specialist)" {% if suggested_specialty and 'Hepatologist' in suggested_specialty %}selected{% endif %}>
+                        Hepatologist (Liver Specialist)
+                    </option>
+                    <option value="Gastroenterologist" {% if suggested_specialty and 'Gastroenterologist' in suggested_specialty and 'Hepatologist' not in suggested_specialty %}selected{% endif %}>
+                        Gastroenterologist
+                    </option>
+                    <option value="General Physician">
+                        General Physician
+                    </option>
+                </select>
+                {% if suggested_specialty %}
+                <small style="color: #ffc107; display: block; margin-top: 5px;">
+                    <i class="fas fa-lightbulb"></i> Recommended: {{ suggested_specialty }}
+                </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-comment-medical"></i> Additional Notes (Optional)
+                </label>
+                <textarea class="form-control" name="message" 
+                          placeholder="Any specific symptoms, concerns, or questions for the doctor..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fas fa-calendar-check"></i>
+                Confirm Appointment
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('appointmentDate');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+    
+    // Set default date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().split('T')[0];
+});
+
+// Form validation
+const form = document.getElementById('appointmentForm');
+form.addEventListener('submit', function(e) {
+    const submitBtn = document.getElementById('submitBtn');
+    const dateInput = document.getElementById('appointmentDate');
+    const selectedDate = new Date(dateInput.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Validate date is not in the past
+    if (selectedDate < today) {
+        e.preventDefault();
+        alert('Please select a future date for your appointment.');
+        return false;
+    }
+    
+    // Validate weekend (optional - remove if appointments allowed on weekends)
+    const dayOfWeek = selectedDate.getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        if (!confirm('You selected a weekend date. Appointments are typically scheduled on weekdays. Continue anyway?')) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Booking...';
+});
+
+// Phone number formatting
+const phoneInput = document.querySelector('input[name="phone"]');
+if (phoneInput) {
+    phoneInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9+\-\s()]/g, '');
+    });
+}
+</script>
+</body>
+</html>

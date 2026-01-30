@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predict - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Universal Scroll Fix */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.top-nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.top-nav .brand i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.top-nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Main Container */
+.predict-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Alert Messages */
+.alert-custom {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    color: #ffd166;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-custom i {
+    font-size: 24px;
+}
+
+.alert-custom a {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* Tabs */
+.custom-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.tab-btn i {
+    font-size: 20px;
+}
+
+/* Form Card */
+.form-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Form Elements */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #ffc107;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+select.form-control option {
+    background: #1a1a2e;
+    color: white;
+}
+
+/* Upload Box */
+.upload-box {
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+}
+
+.upload-box:hover {
+    border-color: #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.upload-box i {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 15px;
+}
+
+.upload-box h4 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.upload-box p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+}
+
+.upload-box input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    color: #ffc107;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Info Cards */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.info-card {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-card i {
+    font-size: 28px;
+    color: #ffc107;
+}
+
+.info-card-content h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.info-card-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Footer */
+.footer-disclaimer {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 30px;
+    padding: 15px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 12px;
+}
+
+.footer-disclaimer i {
+    color: #ef4444;
+}
+
+/* Error Message */
+.error-message {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fecaca;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 32px;
+    }
+
+    .form-card {
+        padding: 25px 20px;
+    }
+
+    .custom-tabs {
+        flex-direction: column;
+    }
+
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .top-nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>LiverAI</span>
+        </div>
+        <div class="top-nav-links">
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+             <a href="{{ url_for('my_appointments') }}">
+                <i class="far fa-file"></i> {{ get_text('My appointments') }}
+            </a>
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('user_history') }}">
+                <i class="fas fa-history"></i> History
+
+            
+
+            </a>
+            <a href="{{ url_for('user_messages') }}">
+                <i class="fas fa-envelope"></i> Messages
+            </a>
+            <a href="{{ url_for('settings') }}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            {% else %}
+            <a href="{{ url_for('login') }}">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="predict-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-microscope"></i> Liver Disease Prediction</h1>
+            <p>Choose your prediction method and enter the required information</p>
+        </div>
+
+        <!-- Login Warning -->
+        {% if not session.get('user_id') %}
+        <div class="alert-custom">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>Authentication Required</strong><br>
+                You must <a href="{{ url_for('login') }}">login</a> to use the prediction system.
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-times-circle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Tabs -->
+        <div class="custom-tabs">
+            <button class="tab-btn active" onclick="switchTab('blood')" id="bloodTab">
+                <i class="fas fa-vial"></i>
+                Blood Test Analysis
+            </button>
+            <button class="tab-btn" onclick="switchTab('image')" id="imageTab">
+                <i class="fas fa-image"></i>
+                Image Scan Analysis
+            </button>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <!-- Blood Test Form -->
+            <div class="tab-content active" id="bloodContent">
+                <form method="POST" action="{{ url_for('predict_blood') }}" id="bloodForm" {% if not session.get('user_id') %}onsubmit="return false;"{% endif %}>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" name="Age" class="form-control" placeholder="Enter age" required min="1" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="Gender" class="form-control" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Bilirubin (mg/dL)</label>
+                            <input type="number" step="0.01" name="Total_Bilirubin" class="form-control" placeholder="0.0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Direct Bilirubin (mg/dL)</label>
+                            <input type="number" step="0.01" name="Direct_Bilirubin" class="form-control" placeholder="0.0" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Alkaline Phosphatase (IU/L)</label>
+                            <input type="number" name="Alkaline_Phosphotase" class="form-control" placeholder="0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>SGPT / ALT (IU/L)</label>
+                            <input type="number" name="SGPT" class="form-control" placeholder="0" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>SGOT / AST (IU/L)</label>
+                            <input type="number" name="SGOT" class="form-control" placeholder="0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Proteins (g/dL)</label>
+                            <input type="number" step="0.01" name="Total_Proteins" class="form-control" placeholder="0.0" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Albumin (g/dL)</label>
+                            <input type="number" step="0.01" name="Albumin" class="form-control" placeholder="0.0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>A/G Ratio</label>
+                            <input type="number" step="0.01" name="A_G_Ratio" class="form-control" placeholder="0.0" required min="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-chart-line"></i>
+                        Analyze Blood Test
+                    </button>
+                </form>
+            </div>
+
+            <!-- Image Upload Form -->
+            <div class="tab-content" id="imageContent">
+                <form method="POST" action="{{ url_for('predict_image') }}" enctype="multipart/form-data" id="imageForm" {% if not session.get('user_id') %}onsubmit="return false;"{% endif %}>
+                    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h4>Upload Medical Image</h4>
+                        <p>Click to select or drag and drop</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Supported: JPG, JPEG, PNG</p>
+                        <input type="file" id="fileInput" name="file" accept="image/*" onchange="showFileName(this)" required>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-brain"></i>
+                        Analyze Image
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <i class="fas fa-info-circle"></i>
+                <div class="info-card-content">
+                    <h5>Blood Test Analysis</h5>
+                    <p>Uses machine learning to analyze clinical parameters like bilirubin, enzymes, and protein levels.</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-brain"></i>
+                <div class="info-card-content">
+                    <h5>Image Scan Analysis</h5>
+                    <p>Deep learning model analyzes liver images to detect fibrosis stages (F0-F4).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Disclaimer -->
+        <div class="footer-disclaimer">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Medical Disclaimer:</strong> This is a decision support tool only. Not a replacement for professional medical diagnosis. Always consult qualified healthcare professionals.
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching
+function switchTab(tab) {
+    const bloodTab = document.getElementById('bloodTab');
+    const imageTab = document.getElementById('imageTab');
+    const bloodContent = document.getElementById('bloodContent');
+    const imageContent = document.getElementById('imageContent');
+
+    if (tab === 'blood') {
+        bloodTab.classList.add('active');
+        imageTab.classList.remove('active');
+        bloodContent.classList.add('active');
+        imageContent.classList.remove('active');
+    } else {
+        imageTab.classList.add('active');
+        bloodTab.classList.remove('active');
+        imageContent.classList.add('active');
+        bloodContent.classList.remove('active');
+    }
+}
+
+// Show file name
+function showFileName(input) {
+    const fileName = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+        fileName.textContent = '✓ ' + input.files[0].name;
+    }
+}
+
+// Drag and drop
+const uploadBox = document.querySelector('.upload-box');
+const fileInput = document.getElementById('fileInput');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadBox.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    uploadBox.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    uploadBox.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    uploadBox.style.borderColor = '#ffc107';
+    uploadBox.style.background = 'rgba(255, 193, 7, 0.15)';
+}
+
+function unhighlight(e) {
+    uploadBox.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+    uploadBox.style.background = 'rgba(255, 255, 255, 0.05)';
+}
+
+uploadBox.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+    showFileName(fileInput);
+}
+
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('.btn-submit');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+        });
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

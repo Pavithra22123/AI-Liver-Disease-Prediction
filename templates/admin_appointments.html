@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Appointments - Admin Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+/* Universal Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+.overlay {
+    background-color: rgba(0,0,0,0.4);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.page-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+.page-header h2 i {
+    color: #ffc107;
+}
+.btn-back {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s;
+}
+.btn-back:hover { background: rgba(255,255,255,0.3); }
+
+/* Stats Cards */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+.stat-card i { font-size: 36px; margin-bottom: 10px; }
+.stat-card h4 { margin: 10px 0; font-size: 16px; color: #fff; }
+.stat-card .number { font-size: 32px; font-weight: 700; color: #ffc107; }
+
+/* Table */
+.table-container {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.table {
+    background: rgba(255,255,255,0.95);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.table thead { background: rgba(102,126,234,0.8); }
+.table th { color: white; font-weight: 600; border: none; padding: 15px; }
+.table td { color: #000; border: none; padding: 12px; vertical-align: middle; }
+.table tbody tr:hover { background: rgba(102,126,234,0.1); }
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.status-pending { background: rgba(251,191,36,0.2); color: #d97706; border:1px solid #fbbf24; }
+.status-confirmed { background: rgba(34,197,94,0.2); color:#16a34a; border:1px solid #22c55e; }
+.status-completed { background: rgba(59,130,246,0.2); color:#1d4ed8; border:1px solid #3b82f6; }
+.status-cancelled { background: rgba(239,68,68,0.2); color:#dc2626; border:1px solid #ef4444; }
+
+/* Action Buttons */
+.action-btns { display: flex; gap: 5px; flex-wrap: wrap; }
+.btn-action {
+    padding: 5px 12px; border-radius: 5px; font-size: 12px;
+    text-decoration: none; border: none; cursor: pointer; transition: all 0.3s;
+}
+.btn-confirm { background: rgba(34,197,94,0.2); color:#16a34a; border:1px solid #22c55e; }
+.btn-complete { background: rgba(59,130,246,0.2); color:#1d4ed8; border:1px solid #3b82f6; }
+.btn-cancel { background: rgba(239,68,68,0.2); color:#dc2626; border:1px solid #ef4444; }
+.btn-confirm:hover { background: rgba(34,197,94,0.3); }
+.btn-complete:hover { background: rgba(59,130,246,0.3); }
+.btn-cancel:hover { background: rgba(239,68,68,0.3); }
+
+/* No Data */
+.no-data { text-align:center; padding:60px 20px; color:#ccc; }
+.no-data i { font-size:64px; margin-bottom:15px; }
+
+@media (max-width:768px) {
+    .page-header { flex-direction: column; gap:15px; }
+    .table-container { overflow-x:auto; }
+}
+</style>
+</head>
+<body>
+<div class="overlay">
+<div class="container">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-calendar-check"></i> Manage Appointments</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        {% set pending_count = appointments|selectattr('status','equalto','pending')|list|length %}
+        {% set confirmed_count = appointments|selectattr('status','equalto','confirmed')|list|length %}
+        {% set completed_count = appointments|selectattr('status','equalto','completed')|list|length %}
+        {% set cancelled_count = appointments|selectattr('status','equalto','cancelled')|list|length %}
+        
+        <div class="stat-card stat-pending"><i class="fas fa-clock"></i><h4>Pending</h4><div class="number">{{ pending_count }}</div></div>
+        <div class="stat-card stat-confirmed"><i class="fas fa-check-circle"></i><h4>Confirmed</h4><div class="number">{{ confirmed_count }}</div></div>
+        <div class="stat-card stat-completed"><i class="fas fa-check-double"></i><h4>Completed</h4><div class="number">{{ completed_count }}</div></div>
+        <div class="stat-card stat-cancelled"><i class="fas fa-times-circle"></i><h4>Cancelled</h4><div class="number">{{ cancelled_count }}</div></div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="table-container">
+        <h4 style="color:white; margin-bottom:20px;"><i class="fas fa-list"></i> All Appointments</h4>
+        {% if appointments %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Patient</th><th>Disease</th><th>Risk Level</th><th>Date & Time</th>
+                        <th>Specialty</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in appointments %}
+                    <tr>
+                        <td><strong>#{{ apt.id }}</strong></td>
+                        <td><strong>{{ apt.patient_name }}</strong><br><small style="color:#666;">{{ apt.email }}</small></td>
+                        <td>{{ apt.disease }}</td>
+                        <td>{{ apt.risk_level }}</td>
+                        <td><i class="fas fa-calendar"></i> {{ apt.preferred_date or 'Not set' }}<br><small><i class="fas fa-clock"></i> {{ apt.preferred_time or 'Not set' }}</small></td>
+                        <td>{{ apt.doctor_specialty }}</td>
+                        <td>
+                            {% if apt.status=='pending' %}
+                                <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
+                            {% elif apt.status=='confirmed' %}
+                                <span class="status-badge status-confirmed"><i class="fas fa-check-circle"></i> Confirmed</span>
+                            {% elif apt.status=='completed' %}
+                                <span class="status-badge status-completed"><i class="fas fa-check-double"></i> Completed</span>
+                            {% else %}
+                                <span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                {% if apt.status=='pending' %}
+                                <a href="{{ url_for('update_appointment', appointment_id=apt.id, status='confirmed') }}" class="btn-action btn-confirm" onclick="return confirm('Confirm this appointment?')"><i class="fas fa-check"></i> Confirm</a>
+                                {% endif %}
+                                {% if apt.status in ['pending','confirmed'] %}
+                                <a href="{{ url_for('update_appointment', appointment_id=apt.id, status='completed') }}" class="btn-action btn-complete" onclick="return confirm('Mark as completed?')"><i class="fas fa-check-double"></i> Complete</a>
+                                <a href="{{ url_for('update_appointment', appointment_id=apt.id, status='cancelled') }}" class="btn-action btn-cancel" onclick="return confirm('Cancel this appointment?')"><i class="fas fa-times"></i> Cancel</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-data">
+            <i class="fas fa-calendar-times"></i>
+            <h4>No Appointments Found</h4>
+            <p>No appointments have been booked yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

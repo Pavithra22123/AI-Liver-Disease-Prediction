@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+/* Universal Scroll Fix */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.top-nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.top-nav .brand i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.top-nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Container */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Content Card */
+.content-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    margin-bottom: 25px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content-card h2 {
+    color: #ffc107;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.content-card p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.8;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.content-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.content-card li {
+    padding: 12px 0;
+    padding-left: 35px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+.content-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.feature-card i {
+    font-size: 48px;
+    color: #ffc107;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.stat-item {
+    text-align: center;
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #ffc107;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+}
+
+/* CTA Section */
+.cta-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-cta {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-cta:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 36px;
+    }
+
+    .content-card {
+        padding: 30px 20px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <a href="{{ url_for('index') }}" class="brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>LiverAI</span>
+        </a>
+        <div class="top-nav-links">
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('contact') }}">
+                <i class="fas fa-envelope"></i> Contact
+            </a>
+            <a href="{{ url_for('faq') }}">
+                <i class="fas fa-question-circle"></i> FAQ
+            </a>
+        </div>
+    </div>
+
+    <div class="about-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-info-circle"></i> About Us</h1>
+            <p>Pioneering AI-Powered Liver Disease Detection</p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
+            <p>
+                At LiverAI, we are committed to revolutionizing liver disease diagnosis through cutting-edge artificial intelligence technology. Our mission is to provide accessible, accurate, and early detection tools that empower healthcare professionals and patients to make informed decisions about liver health.
+            </p>
+            <p>
+                We believe that early detection saves lives. By combining advanced machine learning algorithms with medical expertise, we aim to reduce the burden of liver disease worldwide and improve patient outcomes through timely intervention.
+            </p>
+        </div>
+
+        <!-- What We Do Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-laptop-medical"></i> What We Do</h2>
+            <p>
+                Our AI-powered system offers two comprehensive prediction methods:
+            </p>
+            <ul>
+                <li><strong>Blood Test Analysis:</strong> Advanced machine learning algorithms analyze clinical parameters including bilirubin levels, liver enzymes (SGPT/SGOT), protein levels, and more to predict liver disease risk with 95% accuracy.</li>
+                <li><strong>Medical Image Analysis:</strong> Deep learning models powered by MobileNet architecture analyze liver scan images to detect fibrosis stages (F0-F4) with 92% accuracy.</li>
+                <li><strong>Comprehensive Risk Assessment:</strong> Provides detailed health scores, risk classifications, and personalized medical recommendations.</li>
+                <li><strong>Instant Results:</strong> Get predictions in seconds with detailed explanations and actionable insights.</li>
+            </ul>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-brain"></i>
+                <h3>AI-Powered</h3>
+                <p>Advanced machine learning and deep learning models trained on extensive medical datasets</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Secure & Private</h3>
+                <p>Your medical data is encrypted and stored securely with strict privacy controls</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-clock"></i>
+                <h3>Instant Results</h3>
+                <p>Get comprehensive predictions and analysis in seconds, not days</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-user-md"></i>
+                <h3>Medical Grade</h3>
+                <p>Designed to support healthcare professionals in clinical decision-making</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Track Progress</h3>
+                <p>Monitor your liver health over time with comprehensive history tracking</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-file-medical"></i>
+                <h3>Detailed Reports</h3>
+                <p>Download comprehensive PDF reports for your medical records</p>
+            </div>
+        </div>
+
+        <!-- Technology Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-cogs"></i> Our Technology</h2>
+            <p>
+                We utilize state-of-the-art artificial intelligence technologies:
+            </p>
+            <ul>
+                <li><strong>Machine Learning:</strong> Scikit-learn based models for blood test analysis with ensemble methods for improved accuracy.</li>
+                <li><strong>Deep Learning:</strong> MobileNet architecture for efficient and accurate medical image classification.</li>
+                <li><strong>Medical Rule Engine:</strong> Combines AI predictions with established medical guidelines for comprehensive risk assessment.</li>
+                <li><strong>Continuous Learning:</strong> Our models are regularly updated with new data to improve accuracy and reliability.</li>
+            </ul>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">92%</div>
+                <div class="stat-label">Blood Test Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">88%</div>
+                <div class="stat-label">Image Scan Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Prediction Methods</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Availability</div>
+            </div>
+        </div>
+
+        <!-- Important Notice Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-exclamation-triangle"></i> Important Notice</h2>
+            <p>
+                <strong>Medical Disclaimer:</strong> This system is designed as a clinical decision support tool and should not be used as a replacement for professional medical diagnosis. All predictions and recommendations should be reviewed by qualified healthcare professionals. 
+            </p>
+            <p>
+                Always consult with your doctor or a certified hepatologist for proper diagnosis, treatment, and medical advice. This tool is intended to assist, not replace, the relationship between patients and healthcare providers.
+            </p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a href="{{ url_for('register') }}" class="btn-cta">
+                <i class="fas fa-user-plus"></i>
+                Get Started Today
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

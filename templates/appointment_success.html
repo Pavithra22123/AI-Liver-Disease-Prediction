@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Confirmed - LiverAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(45deg); }
+            100% { transform: scale(1) rotate(45deg); }
+        }
+        .checkmark {
+            animation: checkmark 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4 py-16">
+        <div class="max-w-2xl mx-auto">
+            <!-- Success Card -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 text-center">
+                <!-- Success Icon -->
+                <div class="mb-6">
+                    <div class="inline-block p-6 bg-green-100 rounded-full">
+                        <i class="fas fa-check-circle text-6xl text-green-600 checkmark"></i>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                    ✅ Appointment Booked Successfully!
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Your appointment request has been received and is being processed.
+                </p>
+
+                <!-- Appointment Details -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8 text-left">
+                    <h3 class="font-bold text-xl mb-4 text-center text-gray-800">
+                        <i class="fas fa-calendar-check mr-2"></i>Appointment Details
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-calendar text-purple-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Date</p>
+                                <p class="font-semibold text-gray-800">{{ appointment_date }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-clock text-purple-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Time</p>
+                                <p class="font-semibold text-gray-800">{{ appointment_time }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start md:col-span-2">
+                            <i class="fas fa-user-md text-purple-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Doctor Specialty</p>
+                                <p class="font-semibold text-gray-800">{{ doctor_specialty }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What's Next -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 text-left">
+                    <h4 class="font-bold text-gray-800 mb-2">
+                        <i class="fas fa-info-circle mr-2"></i>What Happens Next?
+                    </h4>
+                    <ul class="text-sm text-gray-700 space-y-2 ml-6">
+                        <li class="flex items-start">
+                            <span class="mr-2">1.</span>
+                            <span>Our medical team will review your appointment request</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">2.</span>
+                            <span>You'll receive a confirmation email within 24 hours</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">3.</span>
+                            <span>Check your appointments page for status updates</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">4.</span>
+                            <span>You'll receive reminders before your appointment</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/my_appointments" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition duration-300">
+                        <i class="fas fa-calendar-alt mr-2"></i>View Appointments
+                    </a>
+                    <a href="/user_history" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                        <i class="fas fa-history mr-2"></i>Test History
+                    </a>
+                    <a href="/" class="bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 transition duration-300">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+            </div>
+
+            <!-- Emergency Contact -->
+            <div class="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                <p class="text-sm text-red-800">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <strong>Emergency?</strong> If you're experiencing severe symptoms, please call emergency services immediately or visit the nearest hospital.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

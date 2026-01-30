@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Records - LiverAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        .back-btn { 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px; 
+            text-decoration: none; 
+            color: #667eea; 
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #f0f0ff;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Filter Form Styling */
+        .filter-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+        }
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        form { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, select { 
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        button { 
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-search {
+            background: #667eea;
+            color: white;
+        }
+        .btn-search:hover {
+            background: #5555d4;
+            transform: translateY(-2px);
+        }
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+        
+        /* Results Section */
+        .results-section {
+            margin-top: 30px;
+        }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .results-count {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Table Styling */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        table { 
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td { 
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th { 
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+        tbody tr:hover { 
+            background: #f8f9fa;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 16px;
+        }
+        
+        /* Risk Level Badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .risk-no { background: #d4edda; color: #155724; }
+        .risk-low { background: #fff3cd; color: #856404; }
+        .risk-moderate { background: #fff3cd; color: #856404; }
+        .risk-high { background: #f8d7da; color: #721c24; }
+        .risk-critical { background: #721c24; color: white; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            form {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                grid-column: 1;
+            }
+            table { font-size: 13px; }
+            th, td { padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+        
+        <h1><i class="fas fa-search"></i> Search & Filter Records</h1>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-title">
+                <i class="fas fa-filter"></i>
+                Filter Options
+            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="disease">Disease</label>
+                    <select name="disease" id="disease">
+                        <option value="">All Diseases</option>
+                        {% for d in diseases %}
+                            <option value="{{ d }}" {% if filters.disease == d %}selected{% endif %}>
+                                {{ d }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="risk">Risk Level</label>
+                    <select name="risk" id="risk">
+                        <option value="">All Risk Levels</option>
+                        {% for r in risks %}
+                            <option value="{{ r }}" {% if filters.risk == r %}selected{% endif %}>
+                                {{ r }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_from">From Date</label>
+                    <input type="date" name="date_from" id="date_from" value="{{ filters.date_from }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="date_to">To Date</label>
+                    <input type="date" name="date_to" id="date_to" value="{{ filters.date_to }}">
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+                    <button type="button" class="btn-reset" onclick="window.location.href='{{ url_for('search_records') }}'">
+                        <i class="fas fa-redo"></i>
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <i class="fas fa-list"></i>
+                    Found <strong>{{ records|length }}</strong> record(s)
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient Name</th>
+                            <th>Disease</th>
+                            <th>Risk Level</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if records %}
+                            {% for r in records %}
+                            <tr>
+                                <td>#{{ r.id }}</td>
+                                <td>{{ r.patient_name }}</td>
+                                <td>{{ r.disease }}</td>
+                                <td>
+                                    {% set risk_class = r.risk|lower|replace(' ', '-') %}
+                                    <span class="risk-badge risk-{{ risk_class }}">
+                                        {{ r.risk }}
+                                    </span>
+                                </td>
+                                <td>{{ r.created_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="no-records">
+                                    <i class="fas fa-inbox" style="font-size: 48px; color: #ddd; margin-bottom: 10px;"></i>
+                                    <br>
+                                    No records found matching your criteria
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-submit form when date changes (optional)
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.addEventListener('change', function() {
+                // Optionally auto-submit
+                // this.form.submit();
+            });
+        });
+    </script>
+</body>
+</html>

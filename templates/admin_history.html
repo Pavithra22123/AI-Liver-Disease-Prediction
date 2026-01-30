@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Patient Records - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        html, body {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            min-height: 100vh;
+            height: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header i {
+            font-size: 36px;
+            color: #ffc107;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box input, .search-box select {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .search-box input:focus, .search-box select:focus {
+            background: rgba(255,255,255,0.3);
+            outline: none;
+            border-color: #ffc107;
+        }
+
+        .filter-select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .table-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+
+        .record-count {
+            font-size: 14px;
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .table {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .table thead {
+            background: rgba(0,0,0,0.4);
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .badge-type, .risk-badge, .stage-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-blood {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .badge-image {
+            background: rgba(192, 132, 252, 0.3);
+            color: #c084fc;
+            border: 1px solid #c084fc;
+        }
+
+        .risk-low { background: rgba(34, 197, 94,0.3); color:#22c55e; border:1px solid #22c55e;}
+        .risk-medium, .risk-moderate { background: rgba(251,191,36,0.3); color:#fbbf24; border:1px solid #fbbf24;}
+        .risk-high, .risk-critical { background: rgba(239,68,68,0.3); color:#ef4444; border:1px solid #ef4444;}
+
+        .stage-normal, .stage-f0 { background: rgba(34,197,94,0.3); color:#22c55e;}
+        .stage-f1 { background: rgba(74,222,128,0.3); color:#4ade80;}
+        .stage-moderate, .stage-f2 { background: rgba(251,191,36,0.3); color:#fbbf24;}
+        .stage-advanced, .stage-f3 { background: rgba(251,146,60,0.3); color:#fb923c;}
+        .stage-f4 { background: rgba(239,68,68,0.3); color:#ef4444;}
+
+        .btn-view {
+            background: rgba(79,172,254,0.3);
+            color: #4facfe;
+            border:1px solid #4facfe;
+            padding:6px 15px;
+            border-radius:8px;
+            font-size:13px;
+            text-decoration:none;
+            display:inline-flex;
+            align-items:center;
+            gap:5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover { background: rgba(79,172,254,0.5); color:#fff; transform: translateY(-2px);}
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border:1px solid rgba(255,255,255,0.3);
+            padding:12px 30px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:500;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px);}
+
+        .no-records { text-align:center; padding:50px; color: rgba(255,255,255,0.6);}
+        .no-records i { font-size:64px; margin-bottom:20px; opacity:0.5;}
+
+        .pagination-info { margin-top:20px; text-align:center; color: rgba(255,255,255,0.7); }
+
+        /* Force table text black for visibility */
+        .table th, .table td, .table span, .table a, .table div, .table thead th { color:#000 !important;}
+
+        @media (max-width:768px){
+            .controls, .search-box { flex-direction: column; gap:10px;}
+            .search-box input, .search-box select { width:100%;}
+            .table-container { padding:15px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-clipboard-list"></i> All Patient Records</h2>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search by patient name, disease, or date..." onkeyup="filterTable()">
+            
+            <select class="filter-select" id="typeFilter" onchange="filterTable()">
+                <option value="">All Types</option>
+                <option value="blood_test">Blood Test</option>
+                <option value="image_scan">Image Scan</option>
+            </select>
+
+            <select class="filter-select" id="diseaseFilter" onchange="filterTable()">
+                <option value="">All Diseases</option>
+                {% for d in diseases %}
+                    <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-select" id="riskFilter" onchange="filterTable()">
+                <option value="">All Risks</option>
+                <option value="">No Risk</option>
+                <option value="Low">Low Risk</option>
+                <option value="Medium">Medium Risk</option>
+                <option value="Moderate">Moderate Risk</option>
+                <option value="High">High Risk</option>
+                <option value="Critical">Critical</option>
+            </select>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <div class="record-count">
+            <i class="fas fa-database"></i> Total Records: <span id="recordCount">{{ records|length }}</span>
+        </div>
+
+        {% if records %}
+        <div class="table-responsive">
+            <table class="table" id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient Name</th>
+                        <th>Prediction Type</th>
+                        <th>Disease / Result</th>
+                        <th>Stage</th>
+                        <th>Risk Level</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for r in records %}
+                    <tr>
+                        <td><strong>#{{ r['id'] }}</strong></td>
+                        <td>{{ r['name'] }}</td>
+                        <td>
+                            {% if r['prediction_type'] == 'blood_test' %}
+                                <span class="badge-type badge-blood"><i class="fas fa-vial"></i> Blood Test</span>
+                            {% else %}
+                                <span class="badge-type badge-image"><i class="fas fa-image"></i> Image Scan</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ r['disease'] }}</td>
+                        <td>
+                            {% set stage_lower = r['stage']|lower %}
+                            {% if stage_lower == 'normal' or stage_lower == 'f0' %}<span class="stage-badge stage-normal">{{ r['stage'] }}</span>
+                            {% elif stage_lower == 'f1' %}<span class="stage-badge stage-f1">{{ r['stage'] }}</span>
+                            {% elif stage_lower == 'moderate' or stage_lower == 'f2' %}<span class="stage-badge stage-moderate">{{ r['stage'] }}</span>
+                            {% elif stage_lower == 'advanced' or stage_lower == 'f3' %}<span class="stage-badge stage-advanced">{{ r['stage'] }}</span>
+                            {% elif stage_lower == 'f4' %}<span class="stage-badge stage-f4">{{ r['stage'] }}</span>
+                            {% else %}<span class="stage-badge">{{ r['stage'] }}</span>{% endif %}
+                        </td>
+                        <td>
+                            {% set risk_lower = r['risk']|lower %}
+                            {% if 'low' in risk_lower %}<span class="risk-badge risk-low">{{ r['risk'] }}</span>
+                            {% elif 'medium' in risk_lower or 'moderate' in risk_lower %}<span class="risk-badge risk-medium">{{ r['risk'] }}</span>
+                            {% elif 'high' in risk_lower or 'critical' in risk_lower %}<span class="risk-badge risk-high">{{ r['risk'] }}</span>
+                            {% else %}<span class="risk-badge">{{ r['risk'] }}</span>{% endif %}
+                        </td>
+                        <td>{{ r['created_at'] }}</td>
+                        <td>
+                            <a href="{{ url_for('view_result', record_id=r['id']) }}" class="btn-view"><i class="fas fa-eye"></i> View Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-info">
+            Showing <span id="visibleCount">{{ records|length }}</span> of {{ records|length }} records
+        </div>
+        {% else %}
+        <div class="no-records">
+            <i class="fas fa-inbox"></i>
+            <h4>No Records Found</h4>
+            <p>There are no patient records in the system yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const typeFilter = document.getElementById('typeFilter').value; // keep as is
+    const diseaseFilter = document.getElementById('diseaseFilter').value.toLowerCase();
+    const riskFilter = document.getElementById('riskFilter').value.toLowerCase();
+
+    const table = document.getElementById('recordsTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+    let visibleCount = 0;
+
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
+        const patientName = cells[1].textContent.toLowerCase();
+        let predictionType = cells[2].textContent.toLowerCase().trim(); // "blood test" or "image scan"
+        const disease = cells[3].textContent.toLowerCase();
+        const risk = cells[5].textContent.toLowerCase();
+        const date = cells[6].textContent.toLowerCase();
+
+        // Map table text to dropdown values
+        if (predictionType === 'blood test') predictionType = 'blood_test';
+        if (predictionType === 'image scan') predictionType = 'image_scan';
+
+        const searchMatch = patientName.includes(searchInput) || disease.includes(searchInput) || date.includes(searchInput);
+        const typeMatch = !typeFilter || predictionType === typeFilter; // strict equality
+        const diseaseMatch = !diseaseFilter || disease.includes(diseaseFilter);
+        const riskMatch = !riskFilter || risk.includes(riskFilter);
+
+        if (searchMatch && typeMatch && diseaseMatch && riskMatch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    }
+
+    document.getElementById('visibleCount').textContent = visibleCount;
+}
+
+// Animate rows on load
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach((row, i) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, i * 50);
+    });
+});
+</script>
+
+</body>
+</html>

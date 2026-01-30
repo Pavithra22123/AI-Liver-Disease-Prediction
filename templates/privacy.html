@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Universal Scroll Fix */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 30px 20px 50px;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.top-nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.top-nav .brand i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.top-nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Container */
+.policy-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.last-updated {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+/* Content Card */
+.policy-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-bottom: 25px;
+}
+
+.policy-section {
+    margin-bottom: 35px;
+}
+
+.policy-section h2 {
+    color: #ffc107;
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.policy-section h3 {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    font-size: 18px;
+    margin: 20px 0 12px;
+}
+
+.policy-section p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.policy-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.policy-section li {
+    padding: 8px 0;
+    padding-left: 30px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+.policy-section li::before {
+    content: '•';
+    position: absolute;
+    left: 10px;
+    color: #ffc107;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Highlight Box */
+.highlight-box {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0;
+}
+
+.highlight-box i {
+    color: #ffc107;
+    margin-right: 10px;
+}
+
+.highlight-box p {
+    margin: 0;
+}
+
+/* Contact Box */
+.contact-box {
+    background: rgba(79, 172, 254, 0.15);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.contact-box h3 {
+    color: #4facfe;
+    margin-bottom: 15px;
+}
+
+.contact-box p {
+    margin-bottom: 20px;
+}
+
+.btn-contact {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-contact:hover {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 36px;
+    }
+
+    .policy-card {
+        padding: 30px 20px;
+    }
+
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <a href="{{ url_for('index') }}" class="brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>LiverAI</span>
+        </a>
+        <div class="top-nav-links">
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('about') }}">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+            <a href="{{ url_for('terms') }}">
+                <i class="fas fa-file-contract"></i> Terms
+            </a>
+        </div>
+    </div>
+
+    <div class="policy-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-shield-alt"></i> Privacy Policy</h1>
+            <p class="last-updated">Last Updated: December 28, 2024</p>
+        </div>
+
+        <!-- Content Card -->
+        <div class="policy-card">
+            <!-- Introduction -->
+            <div class="policy-section">
+                <h2><i class="fas fa-file-alt"></i> Introduction</h2>
+                <p>
+                    Welcome to LiverAI's Privacy Policy. We are committed to protecting your privacy and ensuring the security of your personal and medical information. This policy explains how we collect, use, store, and protect your data when you use our Liver Disease Prediction System.
+                </p>
+                <div class="highlight-box">
+                    <p><i class="fas fa-info-circle"></i>
+                        <strong>Your Trust Matters:</strong> We understand that medical data is highly sensitive. We implement industry-standard security measures and comply with applicable data protection regulations to safeguard your information.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Information We Collect -->
+            <div class="policy-section">
+                <h2><i class="fas fa-database"></i> Information We Collect</h2>
+                
+                <h3>1. Personal Information</h3>
+                <ul>
+                    <li>Name and email address</li>
+                    <li>Phone number</li>
+                    <li>Emergency contact information (guardian name and phone)</li>
+                    <li>Account credentials (encrypted passwords)</li>
+                </ul>
+
+                <h3>2. Medical Data</h3>
+                <ul>
+                    <li>Blood test parameters (bilirubin, liver enzymes, proteins, etc.)</li>
+                    <li>Medical scan images (liver images for fibrosis detection)</li>
+                    <li>Prediction results and health scores</li>
+                    <li>Test history and timestamps</li>
+                </ul>
+
+                <h3>3. Technical Information</h3>
+                <ul>
+                    <li>IP address and device information</li>
+                    <li>Browser type and version</li>
+                    <li>Session data and cookies</li>
+                    <li>Usage patterns and interaction data</li>
+                </ul>
+            </div>
+
+            <!-- How We Use Your Information -->
+            <div class="policy-section">
+                <h2><i class="fas fa-cogs"></i> How We Use Your Information</h2>
+                <p>We use your information for the following purposes:</p>
+                <ul>
+                    <li><strong>Medical Analysis:</strong> To perform AI-powered liver disease predictions and provide health assessments</li>
+                    <li><strong>Account Management:</strong> To create and manage your user account, authentication, and preferences</li>
+                    <li><strong>Communication:</strong> To send you test results, updates, and important notifications</li>
+                    <li><strong>Service Improvement:</strong> To enhance our AI models and improve prediction accuracy (anonymized data only)</li>
+                    <li><strong>Research:</strong> To conduct medical research and statistical analysis (anonymized and aggregated data)</li>
+                    <li><strong>Legal Compliance:</strong> To comply with legal obligations and respond to lawful requests</li>
+                </ul>
+            </div>
+
+            <!-- Data Security -->
+            <div class="policy-section">
+                <h2><i class="fas fa-lock"></i> Data Security</h2>
+                <p>We implement comprehensive security measures to protect your data:</p>
+                <ul>
+                    <li><strong>Encryption:</strong> All data is encrypted in transit (SSL/TLS) and at rest</li>
+                    <li><strong>Password Protection:</strong> Passwords are hashed using industry-standard algorithms</li>
+                    <li><strong>Access Controls:</strong> Strict access controls limit data access to authorized personnel only</li>
+                    <li><strong>Secure Storage:</strong> Medical data is stored on secure, HIPAA-compliant servers</li>
+                    <li><strong>Regular Audits:</strong> We conduct regular security audits and vulnerability assessments</li>
+                    <li><strong>Data Backup:</strong> Regular backups ensure data availability and disaster recovery</li>
+                </ul>
+            </div>
+
+            <!-- Data Sharing -->
+            <div class="policy-section">
+                <h2><i class="fas fa-share-alt"></i> Data Sharing and Disclosure</h2>
+                <p>We do not sell your personal or medical data. We may share your information only in these limited circumstances:</p>
+                <ul>
+                    <li><strong>Healthcare Providers:</strong> With your explicit consent to share results with your doctor</li>
+                    <li><strong>Emergency Contacts:</strong> Guardian information may be used in case of critical health alerts</li>
+                    <li><strong>Legal Requirements:</strong> When required by law, court order, or government regulation</li>
+                    <li><strong>Service Providers:</strong> With trusted third-party services (cloud hosting, analytics) under strict confidentiality agreements</li>
+                    <li><strong>Research Partners:</strong> Only anonymized and aggregated data for medical research purposes</li>
+                </ul>
+            </div>
+
+            <!-- Your Rights -->
+            <div class="policy-section">
+                <h2><i class="fas fa-user-shield"></i> Your Rights and Choices</h2>
+                <p>You have the following rights regarding your data:</p>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of your personal and medical data</li>
+                    <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                    <li><strong>Deletion:</strong> Request deletion of your account and associated data</li>
+                    <li><strong>Portability:</strong> Export your data in a machine-readable format</li>
+                    <li><strong>Opt-Out:</strong> Unsubscribe from non-essential communications</li>
+                    <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing at any time</li>
+                </ul>
+            </div>
+
+            <!-- Data Retention -->
+            <div class="policy-section">
+                <h2><i class="fas fa-calendar-alt"></i> Data Retention</h2>
+                <p>
+                    We retain your data for as long as your account is active or as needed to provide services. Medical records are retained for a minimum period as required by law (typically 7 years). You may request account deletion at any time, after which your data will be permanently deleted within 30 days, except where retention is required by law.
+                </p>
+            </div>
+
+            <!-- Cookies -->
+            <div class="policy-section">
+                <h2><i class="fas fa-cookie-bite"></i> Cookies and Tracking</h2>
+                <p>
+                    We use cookies and similar technologies to enhance your experience, maintain sessions, and analyze usage patterns. You can control cookie preferences through your browser settings. Essential cookies required for system functionality cannot be disabled.
+                </p>
+            </div>
+
+            <!-- Children's Privacy -->
+            <div class="policy-section">
+                <h2><i class="fas fa-child"></i> Children's Privacy</h2>
+                <p>
+                    Our service is not intended for users under 18 years of age without parental consent. We do not knowingly collect personal information from children. If you believe we have collected data from a minor, please contact us immediately for deletion.
+                </p>
+            </div>
+
+            <!-- Updates -->
+            <div class="policy-section">
+                <h2><i class="fas fa-sync-alt"></i> Policy Updates</h2>
+                <p>
+                    We may update this Privacy Policy periodically to reflect changes in our practices or legal requirements. We will notify you of significant changes via email or prominent notice on our website. Continued use of our service after changes constitutes acceptance of the updated policy.
+                </p>
+            </div>
+
+            <!-- Contact -->
+            <div class="contact-box">
+                <h3><i class="fas fa-envelope"></i> Questions or Concerns?</h3>
+                <p>If you have questions about this Privacy Policy or how we handle your data, please contact us:</p>
+                <a href="{{ url_for('contact') }}" class="btn-contact">
+                    <i class="fas fa-paper-plane"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

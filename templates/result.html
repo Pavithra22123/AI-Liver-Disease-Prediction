@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prediction Result - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+/* Keep all your existing styles */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* All your existing styles remain the same... */
+/* I'm keeping all your existing CSS */
+
+/* ⭐ NEW: Appointment Alert Styles */
+.appointment-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+    border: 3px solid #f59e0b;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px 0;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { 
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 12px 40px rgba(245, 158, 11, 0.6);
+        transform: scale(1.02);
+    }
+}
+
+.appointment-alert .alert-icon {
+    font-size: 48px;
+    color: #f59e0b;
+    margin-bottom: 15px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.appointment-alert h3 {
+    color: #92400e;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.appointment-alert p {
+    color: #78350f;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.btn-appointment {
+    display: inline-block;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white !important;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 18px;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(245, 158, 11, 0.5);
+    border: none;
+}
+
+.btn-appointment:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+    color: white !important;
+}
+
+.btn-appointment i {
+    margin-right: 10px;
+}
+
+/* Keep all other existing styles from your original file */
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.top-actions .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.top-actions .brand i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.btn-download:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-home {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-home:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.result-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header .prediction-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    padding: 8px 20px;
+    border-radius: 25px;
+    color: #ffc107;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.result-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    margin-bottom: 20px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.image-preview {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.prediction-image {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 3px solid rgba(255, 193, 7, 0.5);
+}
+
+.image-label {
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.result-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.result-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.result-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+}
+
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.risk-low {
+    background: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    border: 2px solid #22c55e;
+}
+
+.risk-medium, .risk-moderate {
+    background: rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    border: 2px solid #fbbf24;
+}
+
+.risk-high, .risk-critical {
+    background: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    border: 2px solid #ef4444;
+}
+
+.score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    position: relative;
+}
+
+.score-high {
+    background: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    border: 4px solid #22c55e;
+}
+
+.score-medium {
+    background: rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    border: 4px solid #fbbf24;
+}
+
+.score-low {
+    background: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    border: 4px solid #ef4444;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffc107;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.content-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.content-section h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.content-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.content-section li {
+    padding: 10px 0;
+    padding-left: 30px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+.content-section li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.info-card {
+    background: rgba(79, 172, 254, 0.15);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.info-card h5 {
+    color: #4facfe;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-card p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.disclaimer {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 30px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.disclaimer i {
+    color: #ef4444;
+    font-size: 24px;
+    margin-top: 2px;
+}
+
+.disclaimer-content h5 {
+    color: #ef4444;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.disclaimer-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.bottom-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-bottom {
+    padding: 12px 30px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.btn-primary-bottom {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-primary-bottom:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-secondary-bottom {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary-bottom:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 32px;
+    }
+
+    .result-card {
+        padding: 25px 20px;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .top-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .bottom-actions {
+        flex-direction: column;
+    }
+
+    .btn-bottom {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Top Actions Bar -->
+    <div class="top-actions">
+        <div class="brand">
+            <i class="fas fa-chart-line"></i>
+            <span>Prediction Result</span>
+        </div>
+        <div class="action-buttons">
+            {% if record_id %}
+            <a href="{{ url_for('download_result', record_id=record_id) }}" class="btn-action btn-download">
+                <i class="fas fa-download"></i> Download Report
+            </a>
+            {% endif %}
+            <a href="{{ url_for('user_history') }}" class="btn-action btn-home">
+                <i class="fas fa-history"></i> History
+            </a>
+            <a href="{{ url_for('index') }}" class="btn-action btn-home">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <div class="result-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-check"></i> Analysis Complete</h1>
+            {% if prediction_type %}
+            <div class="prediction-type">
+            {% if 'blood' in prediction_type|lower %}
+                <i class="fas fa-vial"></i> Blood Test Analysis
+            {% else %}
+                <i class="fas fa-image"></i> Image Scan Analysis
+            {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Result Card -->
+        <div class="result-card">
+            <!-- Image Preview (if available) -->
+            {% if image_path %}
+            <div class="image-preview">
+                <img src="{{ image_path }}" alt="Medical Image" class="prediction-image">
+                <p class="image-label"><i class="fas fa-info-circle"></i> AI-analyzed liver scan image</p>
+            </div>
+            {% endif %}
+
+            <!-- Main Results Grid -->
+            <div class="results-grid">
+                <!-- Disease/Diagnosis -->
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-diagnoses"></i>
+                        Diagnosis
+                    </div>
+                    <div class="result-value">{{ advice.disease }}</div>
+                </div>
+
+                <!-- Risk Level -->
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Risk Level
+                    </div>
+                    <div class="result-value">
+                        {% set risk_lower = advice.risk|lower %}
+                        {% if 'low' in risk_lower %}
+                            <span class="risk-badge risk-low">{{ advice.risk }}</span>
+                        {% elif 'medium' in risk_lower or 'moderate' in risk_lower %}
+                            <span class="risk-badge risk-medium">{{ advice.risk }}</span>
+                        {% else %}
+                            <span class="risk-badge risk-high">{{ advice.risk }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Health Score -->
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-heartbeat"></i>
+                        Health Score
+                    </div>
+                    <div class="result-value">
+                        {% if advice.health_score >= 70 %}
+                            <div class="score-circle score-high">{{ advice.health_score }}</div>
+                        {% elif advice.health_score >= 40 %}
+                            <div class="score-circle score-medium">{{ advice.health_score }}</div>
+                        {% else %}
+                            <div class="score-circle score-low">{{ advice.health_score }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Stage -->
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-layer-group"></i>
+                        Stage
+                    </div>
+                    <div class="result-value">{{ advice.stage }}</div>
+                </div>
+            </div>
+
+            <!-- ⭐⭐⭐ APPOINTMENT ALERT - NEW ⭐⭐⭐ -->
+            {% if needs_appointment %}
+            <div class="appointment-alert">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>⚕️ Doctor Consultation Required</h3>
+                <p>
+                    Based on your diagnosis (<strong>{{ advice.disease }}</strong>) and risk level 
+                    (<strong>{{ advice.risk }}</strong>), we strongly recommend scheduling an 
+                    appointment with a liver specialist for proper medical evaluation and treatment.
+                </p>
+                <a href="{{ url_for('book_appointment', record_id=record_id) }}" class="btn-appointment">
+                    <i class="fas fa-calendar-plus"></i> Book Doctor Appointment Now
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Prediction Confidence -->
+            {% if advice.confidence %}
+            <div class="info-card">
+                <h5><i class="fas fa-chart-pie"></i> Prediction Confidence</h5>
+                {% if prediction_type == "Image Scan" %}
+                    <p>The AI model has {{ advice.confidence }} confidence in this prediction based on image analysis.</p>
+                {% else %}
+                    <p>The AI model has {{ advice.confidence }} confidence in this prediction based on blood test analysis (ANN model).</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Doctor Recommendation -->
+            <div class="info-card">
+                <h5><i class="fas fa-user-md"></i> Medical Recommendation</h5>
+                <p>{{ advice.doctor_recommendation }}</p>
+            </div>
+
+            <!-- Additional Information Tabs -->
+            {% if advice.symptoms or advice.diet %}
+            <div class="section-header">
+                <i class="fas fa-info-circle"></i>
+                Additional Information
+            </div>
+
+            <div class="tab-buttons">
+                {% if advice.symptoms %}
+                <button class="tab-btn active" onclick="showTab('symptoms')">
+                    <i class="fas fa-notes-medical"></i> Symptoms
+                </button>
+                {% endif %}
+                {% if advice.diet %}
+                <button class="tab-btn" onclick="showTab('diet')">
+                    <i class="fas fa-utensils"></i> Diet Plan
+                </button>
+                {% endif %}
+            </div>
+
+            {% if advice.symptoms %}
+            <div class="content-section active" id="symptoms">
+                <h5>Common Symptoms</h5>
+                <ul>
+                    {% for s in advice.symptoms %}
+                    <li>{{ s }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if advice.diet %}
+            <div class="content-section" id="diet">
+                <h5>Dietary Recommendations</h5>
+                <ul>
+                    {% for d in advice.diet %}
+                    <li>{{ d }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="disclaimer-content">
+                    <h5>Medical Disclaimer</h5>
+                    <p>{{ advice.disclaimer }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="bottom-actions">
+            <a href="{{ url_for('predict_form') }}" class="btn-bottom btn-primary-bottom">
+                <i class="fas fa-plus-circle"></i>
+                New Prediction
+            </a>
+            <a href="{{ url_for('user_history') }}" class="btn-bottom btn-secondary-bottom">
+                <i class="fas fa-history"></i>
+                View All Results
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tab switching
+function showTab(tabId) {
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    const section = document.getElementById(tabId);
+    if (section) {
+        section.classList.add('active');
+    }
+
+    event.target.closest('.tab-btn').classList.add('active');
+}
+
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.result-card').forEach(el => {
+    observer.observe(el);
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

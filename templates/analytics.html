@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Dashboard - LiverAI</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.overlay {
+    min-height: 100vh;
+    padding: 30px;
+    background: rgba(0,0,0,0.4);
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.header h2 {
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header a {
+    color: #ffc107;
+    text-decoration: none;
+    padding: 8px 18px;
+    background: rgba(255,193,7,0.2);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.header a:hover {
+    background: rgba(255,193,7,0.4);
+    transform: translateY(-2px);
+}
+
+/* STAT CARDS */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-card i {
+    font-size: 42px;
+    margin-bottom: 10px;
+    color: #ffc107;
+}
+
+.stat-card h4 {
+    color: #fff;
+    font-weight: 600;
+}
+
+.stat-card .number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* CHART CONTAINER */
+.chart-container {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.chart-container h4 {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="overlay">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h2>
+            <i class="fas fa-chart-pie"></i>
+            Analytics Dashboard
+        </h2>
+        <a href="{{ url_for('admin_dashboard') }}">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h4>Total Users</h4>
+            <div class="number">{{ stats.total_users }}</div>
+        </div>
+
+        <div class="stat-card">
+            <i class="fas fa-file-medical"></i>
+            <h4>Total Predictions</h4>
+            <div class="number">{{ stats.total_predictions }}</div>
+        </div>
+
+        <div class="stat-card">
+            <i class="fas fa-virus"></i>
+            <h4>Disease Types</h4>
+            <div class="number">{{ stats["disease_data"]["labels"]|length }}</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="chart-container">
+                <h4><i class="fas fa-chart-pie"></i> Disease Distribution</h4>
+                <canvas id="diseaseChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="chart-container">
+                <h4><i class="fas fa-chart-bar"></i> Risk Level Distribution</h4>
+                <canvas id="riskChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h4><i class="fas fa-chart-line"></i> Monthly Prediction Trends</h4>
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h4><i class="fas fa-calendar-week"></i> Last 7 Days Activity</h4>
+                <canvas id="weekChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ANALYTICS PAGE CHART SCRIPTS WITH PERCENTAGES -->
+<!-- Add this JavaScript to your analytics.html -->
+
+<script>
+// Get stats from backend
+const stats = {{ stats | tojson | safe }};
+
+// 1. DISEASE DISTRIBUTION CHART with Percentages
+const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
+new Chart(diseaseCtx, {
+    type: 'bar',
+    data: {
+        labels: stats.disease_data.labels,
+        datasets: [{
+            label: 'Cases',
+            data: stats.disease_data.values,
+            backgroundColor: [
+                'rgba(239, 68, 68, 0.8)',    // Red
+                'rgba(251, 191, 36, 0.8)',   // Yellow
+                'rgba(34, 197, 94, 0.8)',    // Green
+                'rgba(59, 130, 246, 0.8)',   // Blue
+                'rgba(168, 85, 247, 0.8)',   // Purple
+                'rgba(236, 72, 153, 0.8)'    // Pink
+            ],
+            borderColor: [
+                'rgba(239, 68, 68, 1)',
+                'rgba(251, 191, 36, 1)',
+                'rgba(34, 197, 94, 1)',
+                'rgba(59, 130, 246, 1)',
+                'rgba(168, 85, 247, 1)',
+                'rgba(236, 72, 153, 1)'
+            ],
+            borderWidth: 2,
+            borderRadius: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                padding: 12,
+                titleColor: '#ffc107',
+                bodyColor: '#fff',
+                callbacks: {
+                    label: function(context) {
+                        const index = context.dataIndex;
+                        const value = stats.disease_data.values[index];
+                        const percentage = stats.disease_data.percentages[index];
+                        return `Count: ${value} (${percentage}%)`;  // ⭐ PERCENTAGE
+                    }
+                }
+            }
+        },
+        scales: {
+            y: { 
+                beginAtZero: true,
+                ticks: { color: '#fff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+                ticks: { color: '#fff' },
+                grid: { display: false }
+            }
+        }
+    }
+});
+
+// 2. RISK LEVEL DISTRIBUTION CHART with Percentages
+const riskCtx = document.getElementById('riskChart').getContext('2d');
+new Chart(riskCtx, {
+    type: 'doughnut',
+    data: {
+        labels: stats.risk_data.labels,
+        datasets: [{
+            data: stats.risk_data.values,
+            backgroundColor: [
+                'rgba(16, 185, 129, 0.8)',   // No Risk - Green
+                'rgba(132, 204, 22, 0.8)',   // Low Risk - Light Green
+                'rgba(245, 158, 11, 0.8)',   // Moderate - Orange
+                'rgba(239, 68, 68, 0.8)',    // High - Red
+                'rgba(185, 28, 28, 0.8)'     // Critical - Dark Red
+            ],
+            borderColor: '#fff',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#fff',
+                    padding: 15,
+                    font: { size: 14 },
+                    generateLabels: function(chart) {
+                        const data = chart.data;
+                        return data.labels.map((label, i) => {
+                            const value = stats.risk_data.values[i];
+                            const percentage = stats.risk_data.percentages[i];
+                            return {
+                                text: `${label}: ${value} (${percentage}%)`,  // ⭐ PERCENTAGE IN LEGEND
+                                fillStyle: data.datasets[0].backgroundColor[i],
+                                hidden: false,
+                                index: i
+                            };
+                        });
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                padding: 12,
+                titleColor: '#ffc107',
+                bodyColor: '#fff',
+                callbacks: {
+                    label: function(context) {
+                        const index = context.dataIndex;
+                        const value = stats.risk_data.values[index];
+                        const percentage = stats.risk_data.percentages[index];
+                        return `${context.label}: ${value} (${percentage}%)`;  // ⭐ PERCENTAGE
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 3. MONTHLY TRENDS CHART
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+new Chart(monthlyCtx, {
+    type: 'line',
+    data: {
+        labels: stats.monthly_data.labels,
+        datasets: [{
+            label: 'Predictions',
+            data: stats.monthly_data.values,
+            borderColor: 'rgba(102, 126, 234, 1)',
+            backgroundColor: 'rgba(102, 126, 234, 0.2)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                padding: 12,
+                titleColor: '#ffc107',
+                bodyColor: '#fff'
+            }
+        },
+        scales: {
+            y: { 
+                beginAtZero: true,
+                ticks: { color: '#fff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+                ticks: { color: '#fff' },
+                grid: { display: false }
+            }
+        }
+    }
+});
+
+// 4. WEEKLY ACTIVITY CHART
+const weekCtx = document.getElementById('weekChart').getContext('2d');
+new Chart(weekCtx, {
+    type: 'bar',
+    data: {
+        labels: stats.week_data.labels,
+        datasets: [{
+            label: 'Daily Predictions',
+            data: stats.week_data.values,
+            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+            borderColor: 'rgba(34, 197, 94, 1)',
+            borderWidth: 2,
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                padding: 12,
+                titleColor: '#ffc107',
+                bodyColor: '#fff'
+            }
+        },
+        scales: {
+            y: { 
+                beginAtZero: true,
+                ticks: { color: '#fff', stepSize: 1 },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+                ticks: { color: '#fff' },
+                grid: { display: false }
+            }
+        }
+    }
+});
+</script>
+
+
+</body>
+</html>

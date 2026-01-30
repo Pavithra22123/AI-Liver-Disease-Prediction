@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - Liver Disease Prediction System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Universal Scroll Fix */
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
+    height: auto;
+}
+
+.overlay {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: visible !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.top-nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.top-nav .brand i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.top-nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Main Container */
+.settings-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 12px;
+    border: none;
+    margin-bottom: 25px;
+    padding: 15px 20px;
+    animation: slideDown 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: rgba(34, 197, 94, 0.2);
+    color: #bbf7d0;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.alert i {
+    font-size: 20px;
+}
+
+/* Settings Card */
+.settings-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffc107;
+    font-weight: 700;
+    font-size: 20px;
+    margin: 25px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+}
+
+.section-header:first-child {
+    margin-top: 0;
+}
+
+/* Form Elements */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.form-group label i {
+    color: #ffc107;
+    font-size: 14px;
+}
+
+.readonly-badge {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fecaca;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    z-index: 1;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #ffc107;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
+.form-control:read-only {
+    background: rgba(100, 100, 100, 0.3);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Toggle Password */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.toggle-password:hover {
+    color: #ffc107;
+}
+
+/* Info Box */
+.info-box {
+    background: rgba(79, 172, 254, 0.15);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-box i {
+    color: #4facfe;
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.info-box-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Buttons */
+.btn-save {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+}
+
+.btn-save:active {
+    transform: translateY(0);
+}
+
+.btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Account Actions */
+.account-actions {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 12px 25px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-change-password {
+    background: rgba(79, 172, 254, 0.2);
+    color: #4facfe;
+    border: 1px solid rgba(79, 172, 254, 0.4);
+}
+
+.btn-change-password:hover {
+    background: rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+    transform: translateY(-2px);
+}
+
+.btn-delete-account {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete-account:hover {
+    background: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    transform: translateY(-2px);
+}
+
+/* Security Info */
+.security-info {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.security-info i {
+    color: #ffc107;
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.security-info-content h6 {
+    color: #ffc107;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.security-info-content p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 32px;
+    }
+
+    .settings-card {
+        padding: 25px 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .top-nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="brand">
+            <i class="fas fa-user-cog"></i>
+            <span>Account Settings</span>
+        </div>
+        <div class="top-nav-links">
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('user_history') }}">
+                <i class="fas fa-history"></i> History
+            </a>
+            <a href="{{ url_for('predict_form') }}">
+                <i class="fas fa-microscope"></i> Predict
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-cog"></i> Settings</h1>
+            <p>Manage your account information and preferences</p>
+        </div>
+
+        <!-- Success/Error Messages -->
+        {% if success %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ success }}</span>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Settings Card -->
+        <div class="settings-card">
+            <form method="POST" action="{{ url_for('settings') }}" id="settingsForm">
+                <!-- Personal Information Section -->
+                <div class="section-header">
+                    <i class="fas fa-user"></i>
+                    Personal Information
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-user"></i>
+                            Full Name
+                        </label>
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="name" 
+                                   value="{{ user.name if user else '' }}" 
+                                   placeholder="Enter your full name"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                            <span class="readonly-badge">READ ONLY</span>
+                        </label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" 
+                                   class="form-control" 
+                                   name="email" 
+                                   value="{{ user.email if user else '' }}" 
+                                   readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-phone"></i>
+                        Phone Number
+                    </label>
+                    <div class="input-group">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" 
+                               class="form-control" 
+                               name="phone" 
+                               value="{{ user.phone if user else '' }}" 
+                               placeholder="Enter your phone number"
+                               pattern="[0-9+\-\s()]*">
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="info-box-content">
+                        <p>Your email cannot be changed for security reasons. If you need to update it, please contact support.</p>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact Section -->
+                <div class="section-header">
+                    <i class="fas fa-user-shield"></i>
+                    Emergency Contact
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-user-friends"></i>
+                            Guardian Name
+                        </label>
+                        <div class="input-group">
+                            <i class="fas fa-user-friends input-icon"></i>
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="guardian_name" 
+                                   value="{{ user.guardian_name if user else '' }}" 
+                                   placeholder="Emergency contact name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-phone-alt"></i>
+                            Guardian Phone
+                        </label>
+                        <div class="input-group">
+                            <i class="fas fa-phone-alt input-icon"></i>
+                            <input type="tel" 
+                                   class="form-control" 
+                                   name="guardian_phone" 
+                                   value="{{ user.guardian_phone if user else '' }}" 
+                                   placeholder="Emergency contact phone"
+                                   pattern="[0-9+\-\s()]*">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <button type="submit" class="btn-save" id="saveBtn">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+            </form>
+
+            <!-- Security Info -->
+            <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                <div class="security-info-content">
+                    <h6>Security Tip</h6>
+                    <p>Keep your account information up to date. Your emergency contact will be notified in case of critical health alerts.</p>
+                </div>
+            </div>
+
+            <!-- Account Actions -->
+            <div class="account-actions">
+                <div class="section-header">
+                    <i class="fas fa-tools"></i>
+                    Account Actions
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ url_for('forgot') }}" class="btn-action btn-change-password">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </a>
+                    <button onclick="confirmDelete()" class="btn-action btn-delete-account">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Phone number formatting
+const phoneInputs = document.querySelectorAll('input[type="tel"]');
+phoneInputs.forEach(input => {
+    input.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9+\-\s()]/g, '');
+    });
+});
+
+// Form submission handling
+const settingsForm = document.getElementById('settingsForm');
+if (settingsForm) {
+    settingsForm.addEventListener('submit', function(e) {
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        saveBtn.disabled = true;
+    });
+}
+
+// Auto-dismiss alerts after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-10px)';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+});
+
+// Confirm delete account
+function confirmDelete() {
+    const confirmed = confirm(
+        'Are you sure you want to delete your account?\n\n' +
+        'This action cannot be undone. All your data including test history will be permanently deleted.'
+    );
+    
+    if (confirmed) {
+        // Create a form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{{ url_for('delete_account') }}";
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Prevent form resubmission on refresh
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

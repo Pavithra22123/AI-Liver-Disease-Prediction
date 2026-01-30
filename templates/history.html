@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My History - Liver Disease Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        /* Universal Scroll Fix */
+        html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        min-height: 100vh;
+        height: auto;
+        }
+
+        .overlay {
+        min-height: 100vh !important;
+        height: auto !important;
+        overflow-y: visible !important;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+            font-weight: 700;
+            color: #fff;
+            font-size: 32px;
+        }
+
+        .page-title i {
+            font-size: 36px;
+            color: #ffc107;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-header {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-export:hover {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .stat-card i {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.total i { color: #4facfe; }
+        .stat-card.blood i { color: #fbbf24; }
+        .stat-card.image i { color: #c084fc; }
+        .stat-card.recent i { color: #22c55e; }
+
+        .stat-card h4 {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-header h4 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            padding: 8px 15px 8px 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Table Styles */
+        .table {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .table thead {
+            background: rgba(0,0,0,0.4);
+        }
+
+        .table th {
+            color: #ffc107;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+            white-space: nowrap;
+        }
+
+        .table td {
+            color: #fff;
+            border: none;
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.01);
+        }
+
+        /* Badges */
+        .badge-type {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-blood {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .badge-image {
+            background: rgba(192, 132, 252, 0.3);
+            color: #c084fc;
+            border: 1px solid #c084fc;
+        }
+
+        .risk-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .risk-low {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+
+        .risk-medium, .risk-moderate {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .risk-high, .risk-critical {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        /* Health Score */
+        .health-score {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .score-high {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border: 2px solid #22c55e;
+        }
+
+        .score-medium {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            border: 2px solid #fbbf24;
+        }
+
+        .score-low {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+
+        /* Action Buttons */
+        .btn-view {
+            background: rgba(79, 172, 254, 0.3);
+            color: #4facfe;
+            border: 1px solid #4facfe;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-view:hover {
+            background: rgba(79, 172, 254, 0.5);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 5px;
+        }
+
+        .btn-download:hover {
+            background: rgba(34, 197, 94, 0.5);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: rgba(255, 193, 7, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .btn-predict {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-predict:hover {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .table-container {
+                padding: 20px 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="page-title">
+                    <i class="fas fa-history"></i>
+                    <h2>My Test History</h2>
+                </div>
+                <div class="header-actions">
+                    <a href="{{ url_for('predict_form') }}" class="btn-header btn-predict">
+                        <i class="fas fa-plus-circle"></i>
+                        New Prediction
+                    </a>
+                    <a href="{{ url_for('index') }}" class="btn-header btn-home">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Grid -->
+        {% if records %}
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <i class="fas fa-clipboard-list"></i>
+                <h4>Total Tests</h4>
+                <div class="number">{{ records|length }}</div>
+            </div>
+            <div class="stat-card blood">
+                <i class="fas fa-vial"></i>
+                <h4>Blood Tests</h4>
+                <div class="number">{{ records|selectattr('prediction_type', 'equalto', 'blood_test')|list|length }}</div>
+            </div>
+            <div class="stat-card image">
+                <i class="fas fa-image"></i>
+                <h4>Image Scans</h4>
+                <div class="number">{{ records|selectattr('prediction_type', 'equalto', 'image_scan')|list|length }}</div>
+            </div>
+            <div class="stat-card recent">
+                <i class="fas fa-clock"></i>
+                <h4>Latest Test</h4>
+                <div class="number" style="font-size: 14px;">{{ records[0].created_at if records else 'N/A' }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <div class="table-header">
+                <h4>
+                    <i class="fas fa-list"></i>
+                    All Test Records
+                </h4>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                </div>
+            </div>
+
+            {% if records %}
+            <div class="table-responsive">
+                <table class="table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Health Score</th>
+                            <th>Risk Level</th>
+                            <th>Disease</th>
+                            <th>Stage</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ record.created_at }}</td>
+                            <td>
+                                {% if record.prediction_type == 'blood_test' %}
+                                    <span class="badge-type badge-blood">
+                                        <i class="fas fa-vial"></i> Blood Test
+                                    </span>
+                                {% else %}
+                                    <span class="badge-type badge-image">
+                                        <i class="fas fa-image"></i> Image Scan
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="health-score">
+                                    {% if record.health_score >= 70 %}
+                                        <div class="score-circle score-high">{{ record.health_score }}</div>
+                                    {% elif record.health_score >= 40 %}
+                                        <div class="score-circle score-medium">{{ record.health_score }}</div>
+                                    {% else %}
+                                        <div class="score-circle score-low">{{ record.health_score }}</div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% set risk_lower = record.risk|lower %}
+                                {% if 'low' in risk_lower %}
+                                    <span class="risk-badge risk-low">{{ record.risk }}</span>
+                                {% elif 'medium' in risk_lower or 'moderate' in risk_lower %}
+                                    <span class="risk-badge risk-medium">{{ record.risk }}</span>
+                                {% else %}
+                                    <span class="risk-badge risk-high">{{ record.risk }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ record.disease }}</td>
+                            <td><strong>{{ record.stage }}</strong></td>
+                            <td>
+                                <a href="{{ url_for('view_result', record_id=record.id) }}" class="btn-view">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="{{ url_for('download_result', record_id=record.id) }}" class="btn-download">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-clipboard"></i>
+                <h3>No Test Records Yet</h3>
+                <p>You haven't performed any predictions yet. Start your first test now!</p>
+                <a href="{{ url_for('predict_form') }}" class="btn-predict">
+                    <i class="fas fa-microscope"></i>
+                    Start First Test
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+function searchTable() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const table = document.getElementById('historyTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let found = false;
+
+        for (let j = 0; j < cells.length; j++) {
+            const cellText = cells[j].textContent.toLowerCase();
+            if (cellText.includes(searchTerm)) {
+                found = true;
+                break;
+            }
+        }
+
+        row.style.display = found ? '' : 'none';
+    }
+}
+
+// Add animation on load
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+        }, index * 50);
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

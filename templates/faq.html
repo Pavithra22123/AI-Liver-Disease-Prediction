@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Liver Disease Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        /* Universal Scroll Fix */
+        html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        min-height: 100vh;
+        height: auto;
+        }
+
+        .overlay {
+        min-height: 100vh !important;
+        height: auto !important;
+        overflow-y: visible !important;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            min-height: 100vh;
+            padding: 50px 20px;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header h1 i {
+            color: #ffc107;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #ffc107;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+        }
+
+        /* FAQ Container */
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-tab {
+            padding: 10px 25px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .category-tab:hover {
+            background: rgba(255, 193, 7, 0.3);
+            border-color: #ffc107;
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        /* FAQ Cards */
+        .faq-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .faq-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .faq-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 18px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            margin: 0;
+        }
+
+        .faq-question i {
+            color: #ffc107;
+            font-size: 20px;
+        }
+
+        .faq-toggle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 193, 7, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffc107;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .faq-card.active .faq-toggle {
+            background: #ffc107;
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-card.active .faq-body {
+            max-height: 500px;
+            padding: 0 25px 25px;
+        }
+
+        .faq-answer {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 15px;
+            padding-left: 32px;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .no-results i {
+            font-size: 64px;
+            color: rgba(255, 193, 7, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .no-results p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Results Counter */
+        .results-counter {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* Back Button */
+        .btn-back-container {
+            text-align: center;
+            margin-top: 50px;
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 12px 35px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Help Section */
+        .help-section {
+            background: rgba(255, 193, 7, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out 0.7s both;
+        }
+
+        .help-section h4 {
+            color: #ffc107;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .help-section p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .btn-contact {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-contact:hover {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 36px;
+            }
+
+            .faq-question {
+                font-size: 16px;
+            }
+
+            .category-tabs {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="faq-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>
+                    <i class="fas fa-question-circle"></i>
+                    Frequently Asked Questions
+                </h1>
+                <p>Find answers to common questions about our liver disease prediction system</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search for a question..." 
+                           onkeyup="searchFAQ()">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="filterCategory('all')">
+                    <i class="fas fa-th"></i> All
+                </div>
+                <div class="category-tab" onclick="filterCategory('general')">
+                    <i class="fas fa-info-circle"></i> General
+                </div>
+                <div class="category-tab" onclick="filterCategory('prediction')">
+                    <i class="fas fa-brain"></i> Prediction
+                </div>
+                <div class="category-tab" onclick="filterCategory('accuracy')">
+                    <i class="fas fa-chart-line"></i> Accuracy
+                </div>
+                <div class="category-tab" onclick="filterCategory('technical')">
+                    <i class="fas fa-cogs"></i> Technical
+                </div>
+            </div>
+
+            <!-- Results Counter -->
+            <div class="results-counter" id="resultsCounter">
+                Showing <span id="visibleCount">0</span> of {{ faqs|length }} questions
+            </div>
+
+            <!-- FAQ Cards -->
+            <div id="faqList">
+                {% if faqs and faqs|length > 0 %}
+                    {% for faq_item in faqs %}
+                    <div class="faq-card" data-category="{{ faq_item.category if faq_item.category else 'general' }}" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+                        <div class="faq-header" onclick="toggleFAQ(this)">
+                            <h5 class="faq-question">
+                                <i class="fas fa-comment-dots"></i>
+                                {{ faq_item['q'] }}
+                            </h5>
+                            <div class="faq-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="faq-body">
+                            <div class="faq-answer">{{ faq_item['a'] }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-results">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No FAQs Available</h3>
+                        <p>Please check back later for frequently asked questions.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- No Search Results -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No Results Found</h3>
+                <p>Try searching with different keywords</p>
+            </div>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <h4>
+                    <i class="fas fa-life-ring"></i>
+                    Still Have Questions?
+                </h4>
+                <p>Can't find what you're looking for? Our support team is here to help!</p>
+                <a href="{{ url_for('contact') }}" class="btn-contact">
+                    <i class="fas fa-envelope"></i>
+                    Contact Support
+                </a>
+            </div>
+
+            <!-- Back Button -->
+            <div class="btn-back-container">
+                <a href="{{ url_for('index') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle FAQ accordion
+        function toggleFAQ(element) {
+            const faqCard = element.closest('.faq-card');
+            const allCards = document.querySelectorAll('.faq-card');
+            
+            // Close other cards
+            allCards.forEach(card => {
+                if (card !== faqCard) {
+                    card.classList.remove('active');
+                }
+            });
+            
+            // Toggle current card
+            faqCard.classList.toggle('active');
+        }
+
+        // Search functionality
+        function searchFAQ() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const faqCards = document.querySelectorAll('.faq-card');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            faqCards.forEach(card => {
+                const question = card.querySelector('.faq-question').textContent.toLowerCase();
+                const answer = card.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update counter
+            document.getElementById('visibleCount').textContent = visibleCount;
+
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                document.getElementById('faqList').style.display = 'none';
+                noResults.style.display = 'block';
+            } else {
+                document.getElementById('faqList').style.display = 'block';
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Category filter
+        let currentCategory = 'all';
+
+        function filterCategory(category) {
+            currentCategory = category;
+            const faqCards = document.querySelectorAll('.faq-card');
+            const tabs = document.querySelectorAll('.category-tab');
+            let visibleCount = 0;
+
+            // Update active tab
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.closest('.category-tab').classList.add('active');
+
+            // Filter cards
+            faqCards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update counter
+            document.getElementById('visibleCount').textContent = visibleCount;
+
+            // Reset search
+            document.getElementById('searchInput').value = '';
+        }
+
+        // Initialize counter on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalCards = document.querySelectorAll('.faq-card').length;
+            document.getElementById('visibleCount').textContent = totalCards;
+
+            // Add stagger animation
+            const cards = document.querySelectorAll('.faq-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${0.4 + (index * 0.1)}s`;
+            });
+        });
+
+        // Smooth scroll to top when clicking category
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
