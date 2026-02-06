@@ -44,40 +44,59 @@ mail = Mail(app)
 IMAGE_SIZE = (128, 128)
 DB = "liver.db"
 
-# ========================================
-# LOAD MODELS
+import os
+import pickle
+from tensorflow.keras.models import load_model
 
-# 1. UPDATE MODEL LOADING SECTION (Replace lines 32-45)
+# Base directory for relative paths
+BASE_DIR = os.path.dirname(__file__)
+
+# ========================================
+# 1. LOAD ANN BLOOD TEST MODEL
 # ========================================
 try:
-    # Load ANN model for blood test prediction
-    blood_model = load_model("ann_model.h5")
+    blood_model_path = os.path.join(BASE_DIR, "ann_model.h5")
+    blood_model = load_model(blood_model_path)
     print("✓ ANN Blood test model loaded")
 except Exception as e:
     print(f"⚠ ANN Blood test model error: {e}")
     blood_model = None
 
+# ========================================
+# 2. LOAD SCALER FOR ANN PREPROCESSING
+# ========================================
 try:
-    # Load scaler for ANN preprocessing
-    scaler = pickle.load(open("scaler.pkl", "rb"))
+    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
     print("✓ Scaler loaded")
 except Exception as e:
     print(f"⚠ Scaler error: {e}")
     scaler = None
 
+# ========================================
+# 3. LOAD PREPROCESSING LIMITS
+# ========================================
 try:
-    # Load preprocessing limits (optional)
-    limits = pickle.load(open("limits.pkl", "rb"))
+    limits_path = os.path.join(BASE_DIR, "limits.pkl")
+    with open(limits_path, "rb") as f:
+        limits = pickle.load(f)
     print("✓ Preprocessing limits loaded")
 except Exception as e:
     print(f"⚠ Limits error: {e}")
     limits = None
+
+# ========================================
+# 4. LOAD IMAGE CLASSIFICATION MODEL
+# ========================================
 try:
-    image_model = load_model('mobilenet_liver_model.h5')
+    image_model_path = os.path.join(BASE_DIR, "mobilenet_liver_model.h5")
+    image_model = load_model(image_model_path)
     print("✓ Image classification model loaded")
 except Exception as e:
     print(f"⚠ Image model error: {e}")
     image_model = None
+
 # ========================================
 # MEDICAL REFERENCE DATA
 # ========================================
@@ -2995,4 +3014,5 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)
+
 
