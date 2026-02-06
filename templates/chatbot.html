@@ -50,7 +50,7 @@ body {
     color: white;
 }
 
-/* Chat Window - Changed to be visible by default */
+/* Chat Window */
 .chat-window {
     width: 100%;
     max-width: 900px;
@@ -196,33 +196,67 @@ body {
     font-size: 12px;
     opacity: 0.6;
     margin-top: 5px;
-    text-align: right;
 }
 
 /* Quick Buttons */
 .quick-buttons {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 15px;
+    max-width: 500px;
 }
 
 .quick-btn {
     background: white;
     border: 2px solid #667eea;
     color: #667eea;
-    padding: 10px 18px;
-    border-radius: 20px;
+    padding: 12px 20px;
+    border-radius: 12px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .quick-btn:hover {
     background: #667eea;
     color: white;
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.quick-btn i {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+/* Back to Main Menu Button */
+.back-to-menu-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.back-to-menu-btn:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* Typing Indicator */
@@ -375,6 +409,10 @@ body {
     .message-content {
         max-width: 85%;
     }
+
+    .quick-buttons {
+        max-width: 100%;
+    }
 }
 </style>
 </head>
@@ -410,27 +448,39 @@ body {
         <div class="message message-bot">
             <div class="bot-avatar">🏥</div>
             <div>
-                <div class="message-content">👋 Hello! I'm your AI Health Assistant. I can help you with:
+                <div class="message-content">👋 Welcome to LiverAI Health Assistant!
 
-• Liver disease information
-• Blood test normal ranges
-• How to book appointments
-• Understanding your test results
-• Diet recommendations
+I'm here to help you understand liver health, test results, and our platform features.
 
-How can I help you today?</div>
-                <div class="quick-buttons">
-                    <button class="quick-btn" onclick="sendQuickMessage('What are normal blood test ranges?')">
-                        📊 Normal Ranges
+What would you like to know about?</div>
+                <div class="quick-buttons" id="mainMenu">
+                    <button class="quick-btn" onclick="handleButtonClick('blood_tests')">
+                        <i class="fas fa-vial"></i>
+                        Blood Tests & Normal Ranges
                     </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('How do I book an appointment?')">
-                        📅 Book Appointment
+                    <button class="quick-btn" onclick="handleButtonClick('liver_diseases')">
+                        <i class="fas fa-heartbeat"></i>
+                        Liver Diseases & Conditions
                     </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('Tell me about liver diseases')">
-                        🏥 Liver Diseases
+                    <button class="quick-btn" onclick="handleButtonClick('website_info')">
+                        <i class="fas fa-info-circle"></i>
+                        About This Website
                     </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('Diet recommendations')">
-                        🍎 Diet Tips
+                    <button class="quick-btn" onclick="handleButtonClick('appointments')">
+                        <i class="fas fa-calendar-check"></i>
+                        Appointments & Booking
+                    </button>
+                    <button class="quick-btn" onclick="handleButtonClick('diet_prevention')">
+                        <i class="fas fa-apple-alt"></i>
+                        Diet & Prevention
+                    </button>
+                    <button class="quick-btn" onclick="handleButtonClick('symptoms')">
+                        <i class="fas fa-stethoscope"></i>
+                        Symptoms & Warning Signs
+                    </button>
+                    <button class="quick-btn" onclick="handleButtonClick('type_question')">
+                        <i class="fas fa-keyboard"></i>
+                        Type Your Own Question
                     </button>
                 </div>
             </div>
@@ -459,6 +509,761 @@ How can I help you today?</div>
 </div>
 
 <script>
+// Conversation state
+let currentMenu = 'main';
+
+// Menu structure with questions and answers
+const menuData = {
+    blood_tests: {
+        title: "Blood Tests & Normal Ranges",
+        text: "What would you like to know about blood tests?",
+        buttons: [
+            { id: 'normal_ranges', icon: 'fa-clipboard-list', text: 'Normal Blood Test Ranges' },
+            { id: 'sgpt_alt', icon: 'fa-flask', text: 'What is SGPT/ALT?' },
+            { id: 'sgot_ast', icon: 'fa-flask', text: 'What is SGOT/AST?' },
+            { id: 'bilirubin', icon: 'fa-tint', text: 'What is Bilirubin?' },
+            { id: 'albumin', icon: 'fa-vial', text: 'What is Albumin?' },
+            { id: 'all_parameters', icon: 'fa-list', text: 'All Blood Test Parameters' }
+        ]
+    },
+    liver_diseases: {
+        title: "Liver Diseases & Conditions",
+        text: "Which liver condition would you like to learn about?",
+        buttons: [
+            { id: 'all_diseases', icon: 'fa-hospital', text: 'All Liver Diseases Overview' },
+            { id: 'fatty_liver', icon: 'fa-lungs', text: 'Fatty Liver Disease (NAFLD)' },
+            { id: 'hepatitis', icon: 'fa-virus', text: 'Hepatitis (A, B, C)' },
+            { id: 'cirrhosis', icon: 'fa-skull-crossbones', text: 'Cirrhosis' },
+            { id: 'fibrosis', icon: 'fa-ban', text: 'Liver Fibrosis' },
+            { id: 'liver_cancer', icon: 'fa-radiation', text: 'Liver Cancer (HCC)' }
+        ]
+    },
+    website_info: {
+        title: "About This Website",
+        text: "What would you like to know about LiverAI?",
+        buttons: [
+            { id: 'what_is_website', icon: 'fa-globe', text: 'What is LiverAI?' },
+            { id: 'how_to_use', icon: 'fa-book-open', text: 'How to Use the Platform' },
+            { id: 'parameters_analyzed', icon: 'fa-chart-line', text: 'What Parameters Are Analyzed?' },
+            { id: 'user_types', icon: 'fa-users', text: 'Who Can Use This?' },
+            { id: 'features', icon: 'fa-star', text: 'Platform Features' }
+        ]
+    },
+    appointments: {
+        title: "Appointments & Booking",
+        text: "How can I help with appointments?",
+        buttons: [
+            { id: 'how_to_book', icon: 'fa-calendar-plus', text: 'How to Book Appointment' },
+            { id: 'when_to_see_doctor', icon: 'fa-user-md', text: 'When to See a Doctor?' },
+            { id: 'specialist_types', icon: 'fa-hospital-user', text: 'Types of Specialists' },
+            { id: 'emergency', icon: 'fa-ambulance', text: 'Emergency Warning Signs' }
+        ]
+    },
+    diet_prevention: {
+        title: "Diet & Prevention",
+        text: "What would you like to know?",
+        buttons: [
+            { id: 'liver_diet', icon: 'fa-carrot', text: 'Liver-Healthy Foods' },
+            { id: 'foods_to_avoid', icon: 'fa-ban', text: 'Foods to Avoid' },
+            { id: 'prevention_tips', icon: 'fa-shield-alt', text: 'Prevention Strategies' },
+            { id: 'risk_factors', icon: 'fa-exclamation-triangle', text: 'Risk Factors' }
+        ]
+    },
+    symptoms: {
+        title: "Symptoms & Warning Signs",
+        text: "What information do you need?",
+        buttons: [
+            { id: 'all_symptoms', icon: 'fa-notes-medical', text: 'All Liver Disease Symptoms' },
+            { id: 'early_signs', icon: 'fa-eye', text: 'Early Warning Signs' },
+            { id: 'emergency_symptoms', icon: 'fa-heartbeat', text: 'Emergency Symptoms' },
+            { id: 'diagnostic_tests', icon: 'fa-microscope', text: 'Diagnostic Tests Available' }
+        ]
+    }
+};
+
+// Response data for each button
+const responses = {
+    // Blood Tests
+    normal_ranges: `📊 Normal Blood Test Ranges for Liver Function:
+
+🔹 Total Bilirubin: 0.3-1.2 mg/dL
+🔹 Direct Bilirubin: 0-0.3 mg/dL
+🔹 Indirect Bilirubin: 0.1-1.0 mg/dL
+🔹 SGPT/ALT: 7-55 IU/L (Men: up to 50, Women: up to 35)
+🔹 SGOT/AST: 8-40 IU/L (Men: up to 40, Women: up to 32)
+🔹 Alkaline Phosphatase: 40-140 IU/L
+🔹 Total Proteins: 6.0-8.3 g/dL
+🔹 Albumin: 3.5-5.5 g/dL
+🔹 Globulin: 2.0-3.5 g/dL
+🔹 A/G Ratio: 1.0-2.5
+
+⚠️ Important: Values outside these ranges may indicate liver problems. Always consult a doctor for interpretation.`,
+
+    sgpt_alt: `🔬 SGPT/ALT (Alanine Aminotransferase):
+
+What is it?
+An enzyme found mainly in the liver. When liver cells are damaged, ALT is released into the bloodstream.
+
+Normal Range: 7-55 IU/L
+
+High Levels Mean:
+- Liver cell damage or inflammation
+- Hepatitis (viral, alcoholic, or autoimmune)
+- Fatty liver disease
+- Cirrhosis
+- Liver tumors
+- Medication side effects
+
+Very High (>10x normal):
+- Acute viral hepatitis
+- Drug-induced liver injury
+- Shock or severe trauma`,
+
+    sgot_ast: `🔬 SGOT/AST (Aspartate Aminotransferase):
+
+What is it?
+An enzyme found in liver, heart, muscles, and kidneys. Less specific to liver than ALT.
+
+Normal Range: 8-40 IU/L
+
+High Levels Mean:
+- Liver disease
+- Heart attack
+- Muscle injury
+- Hemolysis (red blood cell destruction)
+
+AST/ALT Ratio:
+- Ratio < 1: Usually fatty liver or chronic hepatitis
+- Ratio > 2: Suggests alcoholic liver disease or cirrhosis`,
+
+    bilirubin: `🟡 Bilirubin (Total, Direct, Indirect):
+
+What is Bilirubin?
+A yellow pigment produced when red blood cells break down. Processed by the liver and excreted in bile.
+
+Types:
+1️⃣ Total Bilirubin (0.3-1.2 mg/dL) - Total amount in blood
+2️⃣ Direct/Conjugated (0-0.3 mg/dL) - Processed by liver
+3️⃣ Indirect/Unconjugated (0.1-1.0 mg/dL) - Not yet processed
+
+High Bilirubin Causes:
+- High Indirect: Hemolysis, Gilbert's syndrome
+- High Direct: Bile duct obstruction, hepatitis, cirrhosis
+- High Total: Liver disease, gallstones, pancreatic cancer
+
+Symptoms of High Bilirubin:
+- Jaundice (yellow skin/eyes)
+- Dark urine
+- Pale stools
+- Itching`,
+
+    albumin: `🔬 Albumin:
+
+What is it?
+The main protein made by the liver. Helps maintain blood volume and transports hormones, vitamins, and drugs.
+
+Normal Range: 3.5-5.5 g/dL
+
+Low Albumin Causes:
+- Chronic liver disease (cirrhosis)
+- Malnutrition
+- Kidney disease
+- Inflammatory bowel disease
+- Severe infections
+
+Symptoms:
+- Swelling in legs/ankles (edema)
+- Fluid in abdomen (ascites)
+- Weakness and fatigue`,
+
+    all_parameters: `🧪 Blood Test Parameters We Analyze:
+
+1. Total Bilirubin - Measures bile pigment (liver/blood health)
+2. Direct Bilirubin - Conjugated bilirubin (bile duct function)
+3. Indirect Bilirubin - Unconjugated bilirubin (calculated value)
+4. SGPT/ALT - Enzyme indicating liver cell damage
+5. SGOT/AST - Enzyme for liver/heart damage
+6. Alkaline Phosphatase - Enzyme for bile duct/bone issues
+7. Total Proteins - Overall protein levels in blood
+8. Albumin - Main protein made by liver
+9. Globulin - Immune system proteins (calculated)
+10. A/G Ratio - Albumin to Globulin ratio (liver function)
+11. Gender - Male/Female (affects normal ranges)
+12. Age - Patient age (affects interpretation)
+
+All values are analyzed by our AI to predict liver disease stage and risk level.`,
+
+    // Liver Diseases
+    all_diseases: `🏥 Liver Diseases Detected by Our AI:
+
+1. No Liver Disease ✅
+- Stage: F0 (Healthy)
+- Risk: None/Low
+- Description: Normal liver function
+
+2. Fatty Liver Disease (NAFLD) 🟡
+- Stage: F1-F2
+- Risk: Low to Moderate
+- Fat accumulation in liver cells
+
+3. Hepatitis 🟠
+- Stage: F2-F3
+- Risk: Moderate to High
+- Liver inflammation (viral, alcoholic, autoimmune)
+
+4. Liver Fibrosis 🔴
+- Stage: F2-F3
+- Risk: Moderate to High
+- Scarring of liver tissue
+
+5. Cirrhosis 🔴
+- Stage: F4
+- Risk: High to Critical
+- Severe scarring and liver damage
+
+6. Liver Cancer (HCC) ⚫
+- Stage: Advanced
+- Risk: Critical
+- Hepatocellular carcinoma`,
+
+    fatty_liver: `🟡 Fatty Liver Disease (NAFLD):
+
+What is it?
+Fat builds up in liver cells when you don't drink much alcohol.
+
+Causes:
+- Obesity & overweight
+- Type 2 diabetes
+- High cholesterol
+- Poor diet (high sugar, refined carbs)
+
+Symptoms:
+Often NO symptoms! May have:
+- Fatigue
+- Upper right abdomen discomfort
+
+Treatment:
+✅ Lose 7-10% of body weight
+✅ Exercise 150+ minutes/week
+✅ Mediterranean diet
+✅ Control diabetes & cholesterol
+✅ Avoid alcohol
+
+Good News:
+Can be REVERSED with lifestyle changes!`,
+
+    hepatitis: `🦠 Hepatitis (Liver Inflammation):
+
+Hepatitis A (HAV)
+- Spread: Contaminated food/water
+- Vaccine: Yes ✅
+- Treatment: Rest, fluids
+
+Hepatitis B (HBV)
+- Spread: Blood, sexual contact
+- Vaccine: Yes ✅
+- Treatment: Antiviral drugs
+
+Hepatitis C (HCV)
+- Spread: Blood-to-blood contact
+- Vaccine: No ❌
+- Treatment: Antiviral drugs (cure rate >95%!)
+
+Symptoms:
+- Jaundice (yellow skin/eyes)
+- Fatigue
+- Nausea
+- Abdominal pain
+- Dark urine`,
+
+    cirrhosis: `🔴 Cirrhosis (Liver Scarring):
+
+What is it?
+Late-stage liver disease where healthy tissue is replaced by scar tissue.
+
+Causes:
+1. Chronic alcoholism
+2. Chronic hepatitis B or C
+3. Fatty liver disease (NASH)
+4. Autoimmune diseases
+
+Symptoms:
+- Jaundice
+- Ascites (fluid in abdomen)
+- Edema (swelling in legs)
+- Easy bruising/bleeding
+- Confusion
+- Itching
+
+Treatment:
+- Treat underlying cause
+- Medications for complications
+- Liver transplant (severe cases)
+- Avoid alcohol completely
+
+⚠️ Cannot be reversed, but progression can be slowed.`,
+
+    fibrosis: `🟠 Liver Fibrosis:
+
+What is it?
+Scarring of the liver due to repeated injury/inflammation.
+
+Fibrosis Stages:
+- F0 - No fibrosis (normal)
+- F1 - Mild fibrosis
+- F2 - Moderate fibrosis
+- F3 - Severe fibrosis
+- F4 - Cirrhosis
+
+Causes:
+- Chronic hepatitis B or C
+- Alcohol abuse
+- NASH (fatty liver with inflammation)
+
+Good News:
+Early fibrosis (F1-F2) can sometimes be REVERSED if the cause is eliminated!`,
+
+    liver_cancer: `⚫ Liver Cancer (HCC):
+
+Risk Factors:
+- Chronic hepatitis B or C
+- Cirrhosis
+- Fatty liver disease
+- Alcohol abuse
+- Diabetes & obesity
+
+Symptoms:
+Early: Usually none
+Advanced:
+- Weight loss
+- Loss of appetite
+- Upper abdominal pain
+- Jaundice
+
+Treatment:
+- Surgery or liver transplant
+- Ablation (kill tumor)
+- Targeted therapy
+- Immunotherapy
+
+Prevention:
+✅ Hepatitis B vaccine
+✅ Treat hepatitis C
+✅ Limit alcohol
+✅ Maintain healthy weight`,
+
+    // Website Info
+    what_is_website: `🌐 About LiverAI Platform:
+
+This is a comprehensive AI-powered liver health monitoring system that offers:
+
+✅ Blood Test Analysis - Upload liver function test reports for instant AI analysis
+✅ Medical Image Analysis - Scan liver CT/MRI images for disease detection
+✅ Risk Assessment - Get detailed risk levels and stage predictions
+✅ Appointment Booking - Schedule appointments with specialists
+✅ Patient Dashboard - Track all test results and medical history
+✅ Admin Panel - Healthcare providers can manage patient records
+✅ AI Chatbot - Get instant answers about liver health (that's me! 👋)
+
+Our goal is to provide early detection and monitoring of liver diseases using advanced AI technology.`,
+
+    how_to_use: `📖 How to Use LiverAI:
+
+Step 1: Create Account
+- Register with email, name, and password
+- Choose between Patient or Admin role
+
+Step 2: Login
+- Access your personalized dashboard
+
+Step 3: Upload Test Results
+- Click "Blood Test Prediction" for lab reports
+- Click "Image Scan Prediction" for CT/MRI scans
+- Fill in required parameters or upload images
+
+Step 4: Get AI Analysis
+- Receive instant predictions on disease stage
+- View risk levels and recommendations
+- Download detailed PDF reports
+
+Step 5: Book Appointments (if needed)
+- If risk is Moderate/High/Critical, book with specialists
+- Choose date, time, and doctor type
+
+Step 6: Track History
+- View all past results in your dashboard
+- Monitor disease progression over time`,
+
+    parameters_analyzed: `🧪 Blood Test Parameters We Analyze:
+
+1. Total Bilirubin - Bile pigment levels
+2. Direct Bilirubin - Bile duct function
+3. SGPT/ALT - Liver cell damage indicator
+4. SGOT/AST - Liver/heart damage enzyme
+5. Alkaline Phosphatase - Bile duct enzyme
+6. Total Proteins - Overall protein levels
+7. Albumin - Main liver protein
+8. Globulin - Immune proteins
+9. A/G Ratio - Liver function ratio
+10. Gender & Age - For accurate interpretation
+
+All values are analyzed by our AI to predict liver disease stage and risk level.`,
+
+    user_types: `👥 User Types on LiverAI:
+
+1. Patient Users
+- Upload and analyze blood tests
+- Upload liver scans (CT/MRI)
+- View prediction results
+- Book appointments with doctors
+- Track medical history
+- Download reports
+- Chat with AI assistant
+
+2. Admin/Doctor Users
+- View all patient records
+- Search and filter patient data
+- Monitor high-risk patients
+- Manage appointment requests
+- Generate analytics
+- Export patient reports
+
+Anyone can register as a patient. Admin accounts are for healthcare providers.`,
+
+    features: `⭐ LiverAI Platform Features:
+
+For Patients:
+✅ AI-powered blood test analysis
+✅ Medical image (CT/MRI) scanning
+✅ Instant disease predictions
+✅ Risk level assessments
+✅ Appointment booking system
+✅ Downloadable PDF reports
+✅ Medical history tracking
+✅ 24/7 AI chatbot support
+
+For Doctors/Admins:
+✅ Patient records management
+✅ Advanced search & filtering
+✅ High-risk patient monitoring
+✅ Appointment management
+✅ Analytics dashboard
+✅ Bulk data export
+
+AI Technology:
+✅ Machine learning models
+✅ 92%+ accuracy rate
+✅ Instant predictions
+✅ Continuous learning`,
+
+    // Appointments
+    how_to_book: `📅 How to Book an Appointment:
+
+Eligibility:
+You can book if your results show:
+- Moderate Risk
+- High Risk
+- Critical Risk
+
+Steps:
+1️⃣ Complete blood test or image scan
+2️⃣ Click "Book Appointment" button on results page
+3️⃣ Fill in the form:
+   • Select Date
+   • Select Time Slot
+   • Choose Specialist Type
+   • Add symptoms/notes
+4️⃣ Submit the form
+5️⃣ Receive email confirmation
+
+After Booking:
+✅ Saved in your dashboard
+✅ Email confirmation sent
+✅ Doctor can view your results`,
+
+    when_to_see_doctor: `👨‍⚕️ When to See a Liver Specialist:
+
+See Hepatologist (Liver Specialist) if:
+- Diagnosed with chronic hepatitis B or C
+- Cirrhosis or advanced fibrosis
+- Elevated liver enzymes for >6 months
+- Suspected liver cancer
+- Autoimmune liver disease
+
+See Gastroenterologist if:
+- Digestive issues + liver concerns
+- Fatty liver disease
+- Bile duct problems
+
+See General Physician first if:
+- Mild symptoms
+- First-time abnormal blood tests
+- Prevention & screening`,
+
+    specialist_types: `🩺 Types of Specialists:
+
+Hepatologist
+- Liver disease specialist
+- Recommended for severe cases
+- Treats: Cirrhosis, hepatitis, cancer
+- Advanced liver therapies
+
+Gastroenterologist
+- Digestive system specialist
+- Treats: Liver + digestive issues
+- Performs: Endoscopy, colonoscopy
+
+General Physician
+- For initial consultation
+- Preventive care
+- Can refer to specialists
+- Manages mild conditions`,
+
+    emergency: `🚨 EMERGENCY WARNING SIGNS:
+
+Call 911 Immediately:
+🚨 Severe abdominal pain
+🚨 Vomiting blood
+🚨 Black, tarry stools (internal bleeding)
+🚨 Severe confusion/disorientation
+🚨 Difficulty breathing
+🚨 Sudden severe swelling
+🚨 Seizures
+
+Go to ER Soon:
+⚠️ Yellowing of skin/eyes (jaundice)
+⚠️ Very dark urine (like cola)
+⚠️ Very pale/white stools
+⚠️ Unexplained bruising/bleeding
+⚠️ Swollen abdomen with pain
+
+Note: This chatbot is for information only. In emergencies, always seek immediate medical attention!`,
+
+    // Diet & Prevention
+    liver_diet: `🍎 Liver-Healthy Foods:
+
+BEST FOODS:
+✅ Vegetables: Leafy greens, broccoli, cauliflower, carrots, beets
+✅ Fruits: Berries, apples, citrus fruits, grapes
+✅ Whole Grains: Oats, brown rice, quinoa
+✅ Lean Protein: Fish (salmon, sardines), chicken, tofu, legumes
+✅ Healthy Fats: Olive oil, nuts, avocados
+✅ Coffee: 2-3 cups/day (protects liver!)
+✅ Green Tea: Antioxidant-rich
+✅ Garlic: Helps liver enzymes
+✅ Turmeric: Anti-inflammatory
+
+LIVER DETOX FOODS:
+🌿 Broccoli, kale
+🌿 Beetroot
+🌿 Walnuts
+🌿 Grapefruit
+
+HYDRATION:
+💧 Drink 8-10 glasses of water daily`,
+
+    foods_to_avoid: `❌ Foods to AVOID for Liver Health:
+
+WORST FOODS:
+❌ Alcohol - #1 enemy of liver
+❌ Sugar & Refined Carbs - White bread, pastries, soda
+❌ Fried Foods - High in trans fats
+❌ Processed Meats - Hot dogs, bacon, sausage
+❌ High-Sodium Foods - Canned soups, chips
+❌ Raw Shellfish - Risk of hepatitis A
+
+Why Avoid?
+- Alcohol causes direct liver damage
+- Sugar promotes fatty liver
+- Fried foods increase inflammation
+- High sodium worsens ascites
+- Processed meats contain toxins
+
+Better Alternatives:
+- Water instead of soda
+- Grilled instead of fried
+- Fresh meat instead of processed
+- Low-sodium options`,
+
+    prevention_tips: `🛡️ How to Prevent Liver Disease:
+
+1. Maintain Healthy Weight
+- BMI 18.5-24.9
+- Lose weight gradually (1-2 lbs/week)
+
+2. Limit Alcohol
+- Men: Max 2 drinks/day
+- Women: Max 1 drink/day
+- Better: Avoid completely
+
+3. Get Vaccinated
+✅ Hepatitis A vaccine
+✅ Hepatitis B vaccine
+
+4. Exercise Regularly
+- 150 minutes moderate activity/week
+- Or 75 minutes vigorous activity/week
+
+5. Eat Healthy Diet
+- Mediterranean diet
+- Lots of vegetables & fruits
+- Limit sugar & processed foods
+
+6. Avoid Toxins
+- Use medications as prescribed
+- Avoid acetaminophen overdose
+- Be careful with herbal supplements
+
+7. Regular Checkups
+- Annual blood tests if high-risk
+- Monitor liver enzymes`,
+
+    risk_factors: `⚠️ Liver Disease Risk Factors:
+
+Lifestyle Factors:
+🔴 Heavy alcohol consumption
+🔴 Obesity (BMI >30)
+🔴 Poor diet (high sugar, saturated fat)
+🔴 Lack of exercise
+🔴 IV drug use (sharing needles)
+
+Medical Conditions:
+🔴 Type 2 diabetes
+🔴 High cholesterol
+🔴 High triglycerides
+🔴 Metabolic syndrome
+
+Infections:
+🔴 Hepatitis B virus
+🔴 Hepatitis C virus
+
+Toxins & Medications:
+🔴 Acetaminophen overdose
+🔴 Long-term medication use
+🔴 Harmful herbal supplements
+
+Genetic Factors:
+🔴 Hemochromatosis (iron buildup)
+🔴 Wilson's disease (copper buildup)
+🔴 Family history of liver disease
+
+High-Risk Groups:
+- Heavy drinkers (>10 years)
+- People with diabetes + obesity
+- Healthcare workers`,
+
+    // Symptoms
+    all_symptoms: `⚠️ Liver Disease Symptoms:
+
+Early Stage (Often Silent):
+- Fatigue & weakness
+- Mild nausea
+- Loss of appetite
+- Mild abdominal discomfort
+
+Moderate Stage:
+- Jaundice (yellow skin/eyes) 🟡
+- Dark urine (tea-colored) 🟤
+- Pale/clay-colored stools
+- Itchy skin
+- Easy bruising
+- Swollen abdomen
+
+Advanced Stage:
+- Severe jaundice
+- Ascites (fluid in belly)
+- Leg swelling (edema)
+- Confusion/altered mental state
+- Vomiting blood
+- Black, tarry stools
+- Spider-like blood vessels on skin
+
+Note: Many liver diseases have NO symptoms until advanced. Regular screening is important!`,
+
+    early_signs: `🔍 Early Warning Signs of Liver Disease:
+
+Pay Attention To:
+⚠️ Persistent fatigue (not relieved by rest)
+⚠️ Loss of appetite
+⚠️ Mild nausea after eating
+⚠️ Upper right abdomen discomfort
+⚠️ Unexplained weight loss
+⚠️ Weakness and lack of energy
+
+When to Get Checked:
+- Symptoms persist for >2 weeks
+- Multiple symptoms occur together
+- You have risk factors (obesity, diabetes, alcohol use)
+- Family history of liver disease
+
+Important:
+Many people with early liver disease have NO symptoms! That's why regular screening is crucial if you have risk factors.
+
+Get Annual Blood Tests if:
+- You drink alcohol regularly
+- You're overweight or obese
+- You have diabetes
+- You have hepatitis B or C`,
+
+    emergency_symptoms: `🚨 EMERGENCY Symptoms - Seek Help NOW:
+
+Call 911 Immediately:
+🚨 Vomiting blood or blood in vomit
+🚨 Black, tarry stools (internal bleeding)
+🚨 Severe confusion or can't stay awake
+🚨 Difficulty breathing
+🚨 Severe abdominal pain
+🚨 Seizures
+
+Go to ER Today:
+🔴 Sudden yellowing of skin/eyes
+🔴 Very dark urine (like cola)
+🔴 Very swollen abdomen
+🔴 Unexplained bruising all over body
+🔴 Can't stop vomiting
+
+These symptoms mean:
+- Possible liver failure
+- Internal bleeding
+- Brain swelling (encephalopathy)
+- Severe liver dysfunction
+
+Don't Wait - Get Help Immediately!`,
+
+    diagnostic_tests: `🔬 Liver Disease Diagnostic Tests:
+
+Blood Tests:
+- Liver Function Tests (LFT)
+  - ALT/SGPT, AST/SGOT
+  - Bilirubin (total, direct, indirect)
+  - Alkaline Phosphatase
+  - Albumin, Total Protein
+  - A/G Ratio
+
+- Additional Tests:
+  - Prothrombin Time (PT/INR)
+  - Complete Blood Count (CBC)
+  - Hepatitis viral markers
+  - AFP (for cancer screening)
+
+Imaging Tests:
+- Ultrasound - First-line, shows fatty liver, tumors
+- CT Scan - Detailed liver structure images
+- MRI - Best for detecting tumors
+- FibroScan - Measures liver stiffness (fibrosis)
+
+Advanced Tests:
+- Liver Biopsy - Gold standard, examines tissue
+- Endoscopy - Checks for varices
+- ERCP - Examines bile ducts
+
+When to Get Tested:
+✅ Annual checkup if high-risk
+✅ Symptoms of liver disease
+✅ Family history
+✅ Chronic hepatitis B or C`
+};
+
 // Handle Enter key
 function handleKeyPress(event) {
     if (event.key === 'Enter') {
@@ -466,24 +1271,134 @@ function handleKeyPress(event) {
     }
 }
 
-// Send quick message
-function sendQuickMessage(message) {
-    document.getElementById('userInput').value = message;
-    sendMessage();
+// Handle button clicks
+function handleButtonClick(action) {
+    showTyping(true);
+    
+    setTimeout(() => {
+        showTyping(false);
+        
+        if (action === 'type_question') {
+            // Show message about typing
+            addBotMessage("Great! You can type your question in the text box below and I'll do my best to answer it. 😊\n\nOr click 'Back to Main Menu' to see all topic options again.");
+            addBackToMenuButton();
+        } else if (menuData[action]) {
+            // Show submenu
+            currentMenu = action;
+            const menu = menuData[action];
+            addBotMessage(menu.text, menu.buttons);
+        } else if (responses[action]) {
+            // Show response
+            addBotMessage(responses[action]);
+            addBackToMenuButton();
+        }
+    }, 800);
 }
 
-// Send user message
+// Add bot message with optional buttons
+function addBotMessage(text, buttons = null) {
+    const messagesDiv = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message message-bot';
+    
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    
+    let buttonsHtml = '';
+    if (buttons && buttons.length > 0) {
+        buttonsHtml = '<div class="quick-buttons">';
+        buttons.forEach(btn => {
+            buttonsHtml += `
+                <button class="quick-btn" onclick="handleButtonClick('${btn.id}')">
+                    <i class="fas ${btn.icon}"></i>
+                    ${btn.text}
+                </button>
+            `;
+        });
+        buttonsHtml += '</div>';
+    }
+    
+    messageDiv.innerHTML = `
+        <div class="bot-avatar">🤖</div>
+        <div>
+            <div class="message-content">${text}</div>
+            <div class="message-time">${timeStr}</div>
+            ${buttonsHtml}
+        </div>
+    `;
+    
+    const typingIndicator = document.getElementById('typingIndicator');
+    messagesDiv.insertBefore(messageDiv, typingIndicator);
+    
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Add user message
+function addUserMessage(text) {
+    const messagesDiv = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message message-user';
+    
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            ${text}
+            <div class="message-time">${timeStr}</div>
+        </div>
+    `;
+    
+    const typingIndicator = document.getElementById('typingIndicator');
+    messagesDiv.insertBefore(messageDiv, typingIndicator);
+    
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Add back to menu button
+function addBackToMenuButton() {
+    const messagesDiv = document.getElementById('chatMessages');
+    const lastMessage = messagesDiv.querySelector('.message-bot:last-of-type > div');
+    
+    if (lastMessage && !lastMessage.querySelector('.back-to-menu-btn')) {
+        const backBtn = document.createElement('button');
+        backBtn.className = 'back-to-menu-btn';
+        backBtn.innerHTML = '<i class="fas fa-home"></i> Back to Main Menu';
+        backBtn.onclick = showMainMenu;
+        lastMessage.appendChild(backBtn);
+    }
+}
+
+// Show main menu
+function showMainMenu() {
+    currentMenu = 'main';
+    showTyping(true);
+    
+    setTimeout(() => {
+        showTyping(false);
+        const mainButtons = [
+            { id: 'blood_tests', icon: 'fa-vial', text: 'Blood Tests & Normal Ranges' },
+            { id: 'liver_diseases', icon: 'fa-heartbeat', text: 'Liver Diseases & Conditions' },
+            { id: 'website_info', icon: 'fa-info-circle', text: 'About This Website' },
+            { id: 'appointments', icon: 'fa-calendar-check', text: 'Appointments & Booking' },
+            { id: 'diet_prevention', icon: 'fa-apple-alt', text: 'Diet & Prevention' },
+            { id: 'symptoms', icon: 'fa-stethoscope', text: 'Symptoms & Warning Signs' },
+            { id: 'type_question', icon: 'fa-keyboard', text: 'Type Your Own Question' }
+        ];
+        addBotMessage("What would you like to know about?", mainButtons);
+    }, 500);
+}
+
+// Send typed message
 function sendMessage() {
     const input = document.getElementById('userInput');
     const message = input.value.trim();
     
     if (!message) return;
     
-    // Add user message
-    addMessage(message, 'user');
+    addUserMessage(message);
     input.value = '';
     
-    // Show typing indicator
     showTyping(true);
     
     // Get bot response from Flask API
@@ -495,47 +1410,14 @@ function sendMessage() {
     .then(res => res.json())
     .then(data => {
         showTyping(false);
-        addMessage(data.response, 'bot');
+        addBotMessage(data.response);
+        addBackToMenuButton();
     })
     .catch(err => {
         showTyping(false);
-        addMessage("⚠️ Sorry, there was an error connecting to the server. Please try again.", 'bot');
+        addBotMessage("⚠️ Sorry, there was an error connecting to the server. Please try again.");
         console.error('Error:', err);
     });
-}
-
-// Add message to chat
-function addMessage(text, type) {
-    const messagesDiv = document.getElementById('chatMessages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message message-${type}`;
-    
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    
-    if (type === 'bot') {
-        messageDiv.innerHTML = `
-            <div class="bot-avatar">🤖</div>
-            <div>
-                <div class="message-content">${text}</div>
-                <div class="message-time">${timeStr}</div>
-            </div>
-        `;
-    } else {
-        messageDiv.innerHTML = `
-            <div class="message-content">
-                ${text}
-                <div class="message-time">${timeStr}</div>
-            </div>
-        `;
-    }
-    
-    // Insert before typing indicator
-    const typingIndicator = document.getElementById('typingIndicator');
-    messagesDiv.insertBefore(messageDiv, typingIndicator);
-    
-    // Scroll to bottom
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 // Show/hide typing indicator
