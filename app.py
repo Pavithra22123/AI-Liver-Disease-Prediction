@@ -1050,6 +1050,9 @@ def inject_notifications():
 # ========================================
 
 
+# ========================================
+# 🔧 FIXED COMPREHENSIVE CHATBOT
+# ========================================
 
 @app.route('/chatbot')
 def chatbot():
@@ -1064,86 +1067,963 @@ def chat():
     data = request.get_json()
     user_message = data.get('message', '').lower()
     
-    # Your chatbot logic here
-    # This is where you can add AI/NLP processing
+    # Get bot response
     response = get_bot_response(user_message)
     
     return jsonify({'response': response})
 
 def get_bot_response(message):
     """
-    Generate bot response based on user message
-    You can integrate with OpenAI, Anthropic Claude, or your own NLP model here
+    Comprehensive bot response system
     """
-    msg = message.lower()
+    msg = message.lower().strip()
     
-    # Simple keyword matching (you can replace with AI model)
-    if 'hello' in msg or 'hi' in msg or 'hey' in msg:
-        return '👋 Hello! How can I help you with liver health today?'
+    # ==========================================
+    # GREETINGS
+    # ==========================================
+    if any(word in msg for word in ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good evening', 'hola', 'namaste']):
+        return '👋 Hello! I\'m your AI Health Assistant. I can help you with liver health, blood tests, appointments, and information about this website. How can I assist you today?'
     
-    elif 'normal' in msg or 'range' in msg or 'blood test' in msg:
-        return """📊 Normal Blood Test Ranges:
+    # ==========================================
+    # WEBSITE INFORMATION
+    # ==========================================
+    elif 'information about' in msg and 'website' in msg:
+        return """🌐 About LiverAI Platform:
+        
+This is a comprehensive AI-powered liver health monitoring system that offers:
+
+✅ Blood Test Analysis - Upload your liver function test reports for instant AI analysis
+✅ Medical Image Analysis - Scan liver CT/MRI images for disease detection
+✅ Risk Assessment - Get detailed risk levels and stage predictions
+✅ Appointment Booking - Schedule appointments with specialists based on your results
+✅ Patient Dashboard - Track all your test results and medical history
+✅ Admin Panel - Healthcare providers can manage patient records
+✅ AI Chatbot - Get instant answers about liver health (that's me! 👋)
+
+Our goal is to provide early detection and monitoring of liver diseases using advanced AI technology."""
+    
+    elif ('what is this' in msg or 'about this' in msg or 'about website' in msg or 'website features' in msg or 
+          'what does this website' in msg or 'tell me about website' in msg):
+        return """🌐 About LiverAI Platform:
+        
+This is a comprehensive AI-powered liver health monitoring system that offers:
+
+✅ Blood Test Analysis - Upload your liver function test reports for instant AI analysis
+✅ Medical Image Analysis - Scan liver CT/MRI images for disease detection
+✅ Risk Assessment - Get detailed risk levels and stage predictions
+✅ Appointment Booking - Schedule appointments with specialists based on your results
+✅ Patient Dashboard - Track all your test results and medical history
+✅ Admin Panel - Healthcare providers can manage patient records
+✅ AI Chatbot - Get instant answers about liver health (that's me! 👋)
+
+Our goal is to provide early detection and monitoring of liver diseases using advanced AI technology."""
+    
+    elif 'how to use' in msg or 'how does it work' in msg or 'getting started' in msg or 'how use' in msg:
+        return """📖 How to Use LiverAI:
+
+Step 1: Create Account
+• Register with your email, name, and password
+• Choose between Patient or Admin role
+
+Step 2: Login
+• Access your personalized dashboard
+
+Step 3: Upload Test Results
+• Click "Blood Test Prediction" for lab reports
+• Click "Image Scan Prediction" for CT/MRI scans
+• Fill in required parameters or upload images
+
+Step 4: Get AI Analysis
+• Receive instant predictions on disease stage
+• View risk levels and recommendations
+• Download detailed PDF reports
+
+Step 5: Book Appointments (if needed)
+• If risk is Moderate/High/Critical, book with specialists
+• Choose date, time, and doctor type
+• Receive email confirmation
+
+Step 6: Track History
+• View all past results in your dashboard
+• Monitor disease progression over time"""
+    
+    elif 'parameter' in msg or 'what parameter' in msg:
+        return """🧪 Blood Test Parameters We Analyze:
+
+1. Total Bilirubin - Measures bile pigment (liver/blood health)
+2. Direct Bilirubin - Conjugated bilirubin (bile duct function)
+3. Indirect Bilirubin - Unconjugated bilirubin (calculated value)
+4. SGPT/ALT - Enzyme indicating liver cell damage
+5. SGOT/AST - Enzyme for liver/heart damage
+6. Alkaline Phosphatase - Enzyme for bile duct/bone issues
+7. Total Proteins - Overall protein levels in blood
+8. Albumin - Main protein made by liver
+9. Globulin - Immune system proteins (calculated)
+10. A/G Ratio - Albumin to Globulin ratio (liver function)
+11. Gender - Male/Female (affects normal ranges)
+12. Age - Patient age (affects interpretation)
+
+All values are analyzed by our AI to predict liver disease stage and risk level."""
+    
+    elif 'who can use' in msg or 'user types' in msg or 'user role' in msg or 'roles' in msg:
+        return """👥 User Types on LiverAI:
+
+1. Patient Users
+• Upload and analyze blood tests
+• Upload liver scans (CT/MRI)
+• View prediction results
+• Book appointments with doctors
+• Track medical history
+• Download reports
+• Chat with AI assistant
+
+2. Admin/Doctor Users
+• View all patient records
+• Search and filter patient data
+• Monitor high-risk patients
+• Manage appointment requests
+• Generate analytics
+• Export patient reports
+
+Anyone can register as a patient. Admin accounts are for healthcare providers."""
+    
+    # ==========================================
+    # NORMAL RANGES & BLOOD TESTS
+    # ==========================================
+    elif ('normal range' in msg or 'normal value' in msg or 'blood test range' in msg or 
+          'what are normal' in msg or 'test normal' in msg):
+        return """📊 Normal Blood Test Ranges for Liver Function:
 
 🔹 Total Bilirubin: 0.3-1.2 mg/dL
 🔹 Direct Bilirubin: 0-0.3 mg/dL
-🔹 SGPT/ALT: 7-55 IU/L
-🔹 SGOT/AST: 8-40 IU/L
+🔹 Indirect Bilirubin: 0.1-1.0 mg/dL
+🔹 SGPT/ALT: 7-55 IU/L (Men: up to 50, Women: up to 35)
+🔹 SGOT/AST: 8-40 IU/L (Men: up to 40, Women: up to 32)
 🔹 Alkaline Phosphatase: 40-140 IU/L
-🔹 Total Proteins: 6-8 g/dL
+🔹 Total Proteins: 6.0-8.3 g/dL
 🔹 Albumin: 3.5-5.5 g/dL
+🔹 Globulin: 2.0-3.5 g/dL
 🔹 A/G Ratio: 1.0-2.5
 
-⚠️ Values outside these ranges may indicate liver problems."""
+⚠️ Important: Values outside these ranges may indicate liver problems. Always consult a doctor for interpretation."""
     
-    elif 'appointment' in msg or 'book' in msg:
-        return """📅 How to Book an Appointment:
+    elif 'sgpt' in msg or 'alt' in msg and 'what' in msg:
+        return """🔬 SGPT/ALT (Alanine Aminotransferase):
 
-1️⃣ Login to your account
-2️⃣ Complete a blood test or image scan
-3️⃣ If risk is Moderate/High/Critical, you'll see "Book Appointment" button
-4️⃣ Select your preferred date, time, and specialist
-5️⃣ Submit your booking
-6️⃣ Receive email confirmation
+What is it?
+An enzyme found mainly in the liver. When liver cells are damaged, ALT is released into the bloodstream.
 
-✅ Appointment Types:
-• Gastroenterologist
-• Hepatologist (Liver Specialist)
-• General Physician"""
+Normal Range: 7-55 IU/L
+
+High Levels Mean:
+• Liver cell damage or inflammation
+• Hepatitis (viral, alcoholic, or autoimmune)
+• Fatty liver disease
+• Cirrhosis
+• Liver tumors
+• Medication side effects
+
+Very High (>10x normal):
+• Acute viral hepatitis
+• Drug-induced liver injury
+• Shock or severe trauma
+
+Causes: Alcohol, obesity, medications, viral infections, autoimmune diseases"""
     
-    elif 'liver disease' in msg or 'disease' in msg:
-        return """🏥 Common Liver Diseases:
+    elif 'sgot' in msg or ('ast' in msg and 'what' in msg):
+        return """🔬 SGOT/AST (Aspartate Aminotransferase):
 
-1️⃣ No Liver Disease (Healthy)
-2️⃣ Fatty Liver (Mild)
-3️⃣ Hepatitis (Moderate)
-4️⃣ Cirrhosis (Severe)
-5️⃣ Severe Inflammation (Critical)
-6️⃣ Advanced Disease (End-stage)
+What is it?
+An enzyme found in liver, heart, muscles, and kidneys. Less specific to liver than ALT.
 
-Each has different symptoms, treatments, and prognosis. Would you like details on a specific condition?"""
+Normal Range: 8-40 IU/L
+
+High Levels Mean:
+• Liver disease
+• Heart attack
+• Muscle injury
+• Hemolysis (red blood cell destruction)
+
+AST/ALT Ratio:
+• Ratio < 1: Usually fatty liver or chronic hepatitis
+• Ratio > 2: Suggests alcoholic liver disease or cirrhosis
+
+Note: Always check AST with ALT for better diagnosis"""
     
-    elif 'help' in msg:
-        return """I can help you with:
+    elif 'bilirubin' in msg:
+        return """🟡 Bilirubin (Total, Direct, Indirect):
 
-📊 Blood test normal ranges
-🏥 Liver disease information
-📅 Booking appointments
-🍎 Diet recommendations
-💊 Understanding symptoms
-🧪 Test information
+What is Bilirubin?
+A yellow pigment produced when red blood cells break down. Processed by the liver and excreted in bile.
 
-What would you like to know?"""
+Types:
+1️⃣ Total Bilirubin (0.3-1.2 mg/dL) - Total amount in blood
+2️⃣ Direct/Conjugated (0-0.3 mg/dL) - Processed by liver
+3️⃣ Indirect/Unconjugated (0.1-1.0 mg/dL) - Not yet processed
+
+High Bilirubin Causes:
+• High Indirect: Hemolysis, Gilbert's syndrome
+• High Direct: Bile duct obstruction, hepatitis, cirrhosis
+• High Total: Liver disease, gallstones, pancreatic cancer
+
+Symptoms of High Bilirubin:
+• Jaundice (yellow skin/eyes)
+• Dark urine
+• Pale stools
+• Itching"""
     
+    elif 'alkaline phosphatase' in msg or 'alp' in msg:
+        return """🔬 Alkaline Phosphatase (ALP):
+
+What is it?
+An enzyme found in liver, bile ducts, and bones.
+
+Normal Range: 40-140 IU/L
+
+High Levels Mean:
+• Bile duct obstruction (gallstones, tumors)
+• Liver disease (cirrhosis, hepatitis)
+• Bone disorders (Paget's disease, fractures)
+• Pregnancy (normal increase)
+
+Low Levels Mean:
+• Malnutrition
+• Zinc deficiency
+• Hypothyroidism
+
+When High with Other Tests:
+• High ALP + High Bilirubin = Bile duct problem
+• High ALP + Normal Bilirubin = Possible bone disease"""
+    
+    elif 'albumin' in msg and 'what' in msg:
+        return """🔬 Albumin:
+
+What is it?
+The main protein made by the liver. Helps maintain blood volume and transports hormones, vitamins, and drugs.
+
+Normal Range: 3.5-5.5 g/dL
+
+Low Albumin (Hypoalbuminemia) Causes:
+• Chronic liver disease (cirrhosis)
+• Malnutrition
+• Kidney disease (nephrotic syndrome)
+• Inflammatory bowel disease
+• Severe infections
+
+Symptoms:
+• Swelling in legs/ankles (edema)
+• Fluid in abdomen (ascites)
+• Weakness and fatigue
+
+High Albumin:
+Rare, usually due to dehydration"""
+    
+    elif 'a/g ratio' in msg or 'ag ratio' in msg or 'albumin globulin ratio' in msg:
+        return """🔬 A/G Ratio (Albumin/Globulin Ratio):
+
+What is it?
+The ratio of albumin to globulin proteins in blood.
+
+Normal Range:1.0-2.5
+
+Low A/G Ratio (<1.0) Means:
+• Liver disease (cirrhosis, hepatitis)
+• Kidney disease
+• Autoimmune disorders
+• Multiple myeloma
+• Low albumin or high globulin
+
+**High A/G Ratio (>2.5) Means:**
+- Genetic deficiency of globulin
+- Leukemia
+- Immune deficiency
+
+**Calculation:**
+A/G Ratio = Albumin ÷ Globulin
+If Total Protein = 7.0 g/dL and Albumin = 4.0 g/dL
+Globulin = 7.0 - 4.0 = 3.0 g/dL
+A/G Ratio = 4.0 ÷ 3.0 = 1.33 ✅"""
+    
+    # ==========================================
+    # LIVER DISEASES
+    # ==========================================
+    elif 'liver disease' in msg or 'types of liver' in msg or 'what liver disease' in msg:
+        return """🏥 Liver Diseases Detected by Our AI:
+
+1. No Liver Disease ✅
+- Stage: F0 (Healthy)
+- Risk: None/Low
+- Description: Normal liver function
+
+2. Fatty Liver Disease (NAFLD) 🟡
+- Stage: F1-F2
+- Risk: Low to Moderate
+- Fat accumulation in liver cells
+- Often related to obesity, diabetes
+
+3. Hepatitis 🟠
+- Stage: F2-F3
+- Risk: Moderate to High
+- Liver inflammation (viral, alcoholic, autoimmune)
+- Types: Hepatitis A, B, C, D, E
+
+4. Liver Fibrosis 🔴
+- Stage: F2-F3
+- Risk: Moderate to High
+- Scarring of liver tissue
+- Progresses to cirrhosis if untreated
+
+5. Cirrhosis 🔴
+- Stage: F4
+- Risk: High to Critical
+- Severe scarring and liver damage
+- Can lead to liver failure
+
+6. Liver Cancer (HCC) ⚫
+- Stage: Advanced
+- Risk: Critical
+- Hepatocellular carcinoma
+- Often develops from cirrhosis
+
+Would you like details on a specific disease?"""
+    
+    elif 'fatty liver' in msg or 'nafld' in msg:
+        return """🟡 Fatty Liver Disease (NAFLD):
+
+What is it?
+Fat builds up in liver cells when you don't drink much alcohol.
+
+Types:
+1️⃣ Simple Fatty Liver (Steatosis) - Just fat, no inflammation
+2️⃣ NASH (Non-Alcoholic Steatohepatitis) - Fat + inflammation + damage
+
+Causes:
+- Obesity & overweight
+- Type 2 diabetes
+- High cholesterol
+- Metabolic syndrome
+- Poor diet (high sugar, refined carbs)
+
+Symptoms:
+Often NO symptoms! May have:
+- Fatigue
+- Upper right abdomen discomfort
+- Enlarged liver
+
+Diagnosis:
+- Blood tests (elevated ALT/AST)
+- Ultrasound/CT/MRI
+- FibroScan (measures liver stiffness)
+
+Treatment:
+✅ Lose 7-10% of body weight
+✅ Exercise 150+ minutes/week
+✅ Mediterranean diet
+✅ Control diabetes & cholesterol
+✅ Avoid alcohol
+❌ No specific medication (yet)
+
+Prognosis:
+- Can be REVERSED with lifestyle changes!
+- 20% may progress to NASH
+- 20% of NASH may progress to cirrhosis"""
+    
+    elif 'hepatitis' in msg:
+        return """🦠 Hepatitis (Liver Inflammation):
+
+Types:
+
+Hepatitis A (HAV)
+- Spread: Contaminated food/water
+- Duration: Acute (2-6 months)
+- Vaccine: Yes ✅
+- Treatment: Rest, fluids (self-limiting)
+
+Hepatitis B (HBV)
+- Spread: Blood, sexual contact, mother-to-baby
+- Duration: Can become chronic (90% of infants, 5% adults)
+- Vaccine: Yes ✅
+- Treatment: Antiviral drugs (tenofovir, entecavir)
+
+Hepatitis C (HCV)
+- Spread: Blood-to-blood contact
+- Duration: 75-85% become chronic
+- Vaccine: No ❌
+- Treatment: Antiviral drugs (cure rate >95%!)
+
+Hepatitis D (HDV)
+- Spread: Only with Hepatitis B
+- Rare but severe
+
+Hepatitis E (HEV)
+- Spread: Contaminated water
+- Usually self-limiting
+
+Alcoholic Hepatitis
+- Cause: Heavy alcohol use
+- Treatment: Stop drinking immediately
+
+Autoimmune Hepatitis
+- Cause: Immune system attacks liver
+- Treatment: Immunosuppressants
+
+Symptoms:
+- Jaundice (yellow skin/eyes)
+- Fatigue
+- Nausea
+- Abdominal pain
+- Dark urine
+- Fever"""
+    
+    elif 'cirrhosis' in msg:
+        return """🔴 Cirrhosis (Liver Scarring):
+
+What is it?
+Late-stage liver disease where healthy tissue is replaced by scar tissue, permanently damaging the liver.
+
+Stages:
+- Compensated - Liver still functions, few/no symptoms
+- Decompensated - Liver failing, severe symptoms
+
+Causes:
+1. Chronic alcoholism (most common)
+2. Chronic hepatitis B or C
+3. Fatty liver disease (NASH)
+4. Autoimmune diseases
+5. Bile duct diseases
+6. Genetic disorders (hemochromatosis, Wilson's)
+
+Symptoms:
+Early: None or mild fatigue
+Advanced:
+- Jaundice
+- Ascites (fluid in abdomen)
+- Edema (swelling in legs)
+- Easy bruising/bleeding
+- Spider veins on skin
+- Confusion (hepatic encephalopathy)
+- Itching
+
+Complications:
+⚠️ Portal hypertension
+⚠️ Varices (enlarged veins that can bleed)
+⚠️ Hepatic encephalopathy (brain fog)
+⚠️ Liver cancer
+⚠️ Liver failure
+
+Treatment:
+- Treat underlying cause
+- Medications for complications
+- Liver transplant (severe cases)
+- Avoid alcohol completely
+- Low-sodium diet
+
+Prognosis:
+Cannot be reversed, but progression can be slowed."""
+    
+    elif 'fibrosis' in msg or 'liver fibrosis' in msg or 'scarring' in msg:
+        return """🟠 Liver Fibrosis:
+
+What is it?
+Scarring of the liver due to repeated or continuous injury/inflammation.
+
+Fibrosis Stages (METAVIR Score):
+- F0 - No fibrosis (normal)
+- F1 - Mild fibrosis (portal fibrosis)
+- F2 - Moderate fibrosis (few septa)
+- F3 - Severe fibrosis (many septa)
+- F4 - Cirrhosis (severe scarring)
+
+Causes:
+- Chronic hepatitis B or C
+- Alcohol abuse
+- NASH (fatty liver with inflammation)
+- Autoimmune hepatitis
+- Bile duct diseases
+
+Diagnosis:
+- Blood tests (FibroTest, APRI score)
+- FibroScan (elastography)
+- Liver biopsy (gold standard)
+- Imaging (ultrasound, MRI)
+
+Treatment:
+- Treat underlying disease
+- Antifibrotic medications (in development)
+- Lifestyle changes
+- Regular monitoring
+
+Key Point:
+Early fibrosis (F1-F2) can sometimes be REVERSED if the cause is eliminated!"""
+    
+    elif 'liver cancer' in msg or 'hepatocellular carcinoma' in msg or 'hcc' in msg:
+        return """⚫ Liver Cancer (Hepatocellular Carcinoma - HCC):
+
+What is it?
+Cancer that starts in liver cells (hepatocytes).
+
+Risk Factors:
+- Chronic hepatitis B or C
+- Cirrhosis
+- Fatty liver disease
+- Alcohol abuse
+- Aflatoxin exposure (moldy food)
+- Diabetes & obesity
+- Family history
+
+Symptoms:
+Early: Usually none
+Advanced:
+- Weight loss
+- Loss of appetite
+- Upper abdominal pain
+- Swelling/lump in abdomen
+- Jaundice
+- White, chalky stools
+
+Diagnosis:
+- AFP blood test (tumor marker)
+- CT scan or MRI
+- Liver biopsy
+
+Stages:
+- Stage A (Early) - Single tumor, liver function good
+- Stage B (Intermediate) - Multiple tumors
+- Stage C (Advanced) - Spread to blood vessels
+- Stage D (Terminal) - End-stage
+
+Treatment:
+- Surgery: Tumor removal or liver transplant
+- Ablation: Kill tumor with heat/cold
+- Chemoembolization: Block blood supply to tumor
+- Targeted therapy: Sorafenib, lenvatinib
+- Immunotherapy: Nivolumab, pembrolizumab
+
+Prevention:
+✅ Hepatitis B vaccine
+✅ Treat hepatitis C
+✅ Limit alcohol
+✅ Maintain healthy weight
+✅ Regular screening if high-risk"""
+    
+    # ==========================================
+    # SYMPTOMS
+    # ==========================================
+    elif 'symptom' in msg or 'sign' in msg or 'how do i know' in msg or 'warning sign' in msg:
+        return """⚠️ Liver Disease Symptoms:
+
+Early Stage (Often Silent):
+- Fatigue & weakness
+- Mild nausea
+- Loss of appetite
+- Mild abdominal discomfort
+
+Moderate Stage:
+- Jaundice (yellow skin/eyes) 🟡
+- Dark urine (tea-colored) 🟤
+- Pale/clay-colored stools
+- Itchy skin
+- Easy bruising
+- Swollen abdomen
+
+Advanced Stage:
+- Severe jaundice
+- Ascites (fluid in belly)
+- Leg swelling (edema)
+- Confusion/altered mental state
+- Vomiting blood
+- Black, tarry stools
+- Spider-like blood vessels on skin
+- Enlarged spleen
+
+Emergency Signs - Seek Immediate Help:
+🚨 Severe abdominal pain
+🚨 Vomiting blood
+🚨 Severe confusion
+🚨 Difficulty breathing
+🚨 Sudden swelling
+
+Note: Many liver diseases have NO symptoms until advanced. Regular screening is important!"""
+    
+    # ==========================================
+    # DIET & PREVENTION
+    # ==========================================
+    elif 'diet' in msg or 'food' in msg or 'eat' in msg or 'nutrition' in msg:
+        return """🍎 Liver-Healthy Diet Recommendations:
+
+FOODS TO EAT (Liver-Friendly):
+✅ Vegetables: Leafy greens, broccoli, cauliflower, carrots, beets
+✅ Fruits: Berries, apples, citrus fruits, grapes
+✅ Whole Grains: Oats, brown rice, quinoa
+✅ Lean Protein: Fish (salmon, sardines), chicken, tofu, legumes
+✅ Healthy Fats: Olive oil, nuts, avocados
+✅ Coffee: 2-3 cups/day (shown to protect liver!)
+✅ Green Tea: Antioxidant-rich
+✅ Garlic: Helps liver enzymes
+✅ Turmeric: Anti-inflammatory
+
+FOODS TO AVOID:
+❌ Alcohol - #1 enemy of liver
+❌ Sugar & refined carbs - White bread, pastries, soda
+❌ Fried foods - High in trans fats
+❌ Processed meats - Hot dogs, bacon, sausage
+❌ High-sodium foods - Canned soups, chips
+❌ Raw shellfish - Risk of hepatitis A
+
+LIVER DETOX FOODS:
+🌿 Cruciferous vegetables (broccoli, kale)
+🌿 Beetroot
+🌿 Walnuts
+🌿 Grapefruit
+🌿 Green tea
+
+HYDRATION:
+💧 Drink 8-10 glasses of water daily
+
+DIET PATTERNS:
+- Mediterranean Diet ⭐⭐⭐⭐⭐
+- DASH Diet
+- Plant-based diets"""
+    
+    elif 'prevent' in msg or 'prevention' in msg or 'avoid liver disease' in msg or 'how to avoid' in msg:
+        return """🛡️ How to Prevent Liver Disease:
+
+1. Maintain Healthy Weight
+- BMI 18.5-24.9
+- Lose weight gradually (1-2 lbs/week)
+- Avoid crash diets
+
+2. Limit Alcohol
+- Men: Max 2 drinks/day
+- Women: Max 1 drink/day
+- Better: Avoid completely
+
+3. Get Vaccinated
+✅ Hepatitis A vaccine
+✅ Hepatitis B vaccine
+(No vaccine for Hepatitis C yet)
+
+4. Practice Safe Hygiene
+- Wash hands before eating
+- Avoid contaminated food/water
+- Don't share needles, razors, toothbrushes
+
+5. Exercise Regularly
+- 150 minutes moderate activity/week
+- Or 75 minutes vigorous activity/week
+- Builds muscle, reduces fat
+
+6. Avoid Toxins
+- Use medications as prescribed
+- Avoid acetaminophen overdose
+- Be careful with herbal supplements
+- Avoid aflatoxins (moldy nuts/grains)
+
+7. Eat Healthy Diet
+- Mediterranean diet
+- Lots of vegetables & fruits
+- Limit sugar & processed foods
+
+8. Regular Checkups
+- Annual blood tests if high-risk
+- Liver ultrasound if needed
+- Monitor liver enzymes
+
+9. Manage Chronic Conditions
+- Control diabetes
+- Control cholesterol
+- Manage high blood pressure
+
+10. Avoid Risky Behaviors
+- Safe sex (prevent hepatitis B/C)
+- Sterile tattoo/piercing equipment
+- Screen blood before transfusions"""
+    
+    # ==========================================
+    # APPOINTMENTS
+    # ==========================================
+    elif 'appointment' in msg or 'book' in msg or 'schedule' in msg or 'how to book' in msg:
+        return """📅 How to Book an Appointment on LiverAI:
+
+Eligibility:
+You can book appointments if your test results show:
+- Moderate Risk
+- High Risk  
+- Critical Risk
+
+Steps to Book:
+1️⃣ Complete a blood test or image scan prediction
+2️⃣ If eligible, you'll see "Book Appointment" button on results page
+3️⃣ Click the button
+4️⃣ Fill in the appointment form:
+   • Select Date (future dates only)
+   • Select Time Slot
+   • Choose Specialist Type
+   • Add any additional notes/symptoms
+5️⃣ Submit the form
+6️⃣ Receive confirmation email
+
+Specialist Types Available:
+🩺 Gastroenterologist - Digestive system specialist
+🩺 Hepatologist - Liver disease specialist (recommended for severe cases)
+🩺 General Physician - For initial consultation
+
+After Booking:
+✅ Appointment saved in your dashboard
+✅ Email confirmation sent
+✅ Doctor can view your test results
+✅ You can view appointment status
+
+Note: Low-risk patients don't need immediate specialist appointments but should monitor regularly."""
+    
+    # ==========================================
+    # TREATMENT
+    # ==========================================
+    elif 'treatment' in msg or 'cure' in msg or 'medicine' in msg or 'medication' in msg:
+        return """💊 Liver Disease Treatment Options:
+
+Fatty Liver Disease:
+- Weight loss (7-10% of body weight)
+- Exercise & healthy diet
+- Control diabetes & cholesterol
+- Vitamin E (in some cases)
+- No specific medication yet
+
+Hepatitis B:
+- Antiviral drugs: Tenofovir, Entecavir
+- Interferon injections (some cases)
+- Lifelong monitoring
+- Liver transplant (severe)
+
+Hepatitis C:
+- Direct-Acting Antivirals (DAAs)
+- Sofosbuvir, Ledipasvir, Velpatasvir
+- 8-12 week treatment
+- Cure rate >95%!
+
+Alcoholic Liver Disease:
+- STOP DRINKING (most important!)
+- Nutritional support
+- Corticosteroids (severe cases)
+- Liver transplant (end-stage)
+
+Cirrhosis:
+- Treat underlying cause
+- Manage complications
+- Medications for ascites, encephalopathy
+- Beta-blockers for varices
+- Liver transplant (only cure)
+
+General Medications:
+- Diuretics (for fluid retention)
+- Lactulose (for encephalopathy)
+- Antibiotics (for infections)
+- Vitamin supplements
+
+Important: Always consult a hepatologist for proper treatment plan!"""
+    
+    # ==========================================
+    # DIAGNOSTIC TESTS
+    # ==========================================
+    elif ('diagnostic test' in msg or 'what test' in msg or 'how to diagnose' in msg or 
+          'liver test' in msg or 'tests for liver' in msg):
+        return """🔬 Liver Disease Diagnostic Tests:
+
+Blood Tests:
+- Liver Function Tests (LFT)
+  - ALT/SGPT, AST/SGOT
+  - Bilirubin (total, direct, indirect)
+  - Alkaline Phosphatase
+  - Albumin, Total Protein
+  - A/G Ratio
+
+- Additional Tests:
+  - Prothrombin Time (PT/INR)
+  - Complete Blood Count (CBC)
+  - Hepatitis viral markers
+  - Alpha-fetoprotein (AFP) for cancer
+
+Imaging Tests:
+- Ultrasound - First-line, shows fatty liver, tumors
+- CT Scan - Detailed images of liver structure
+- MRI - Best for detecting tumors, vascular issues
+- FibroScan - Measures liver stiffness (fibrosis)
+
+Advanced Tests:
+- Liver Biopsy - Gold standard, examines tissue
+- Endoscopy - Checks for varices (enlarged veins)
+- ERCP - Examines bile ducts
+- FibroTest - Blood test alternative to biopsy
+
+Genetic Tests:
+- Hemochromatosis gene (iron overload)
+- Wilson's disease gene (copper buildup)
+- Alpha-1 antitrypsin deficiency
+
+When to Get Tested:
+✅ Annual checkup if high-risk
+✅ Symptoms of liver disease
+✅ Family history of liver disease
+✅ Chronic hepatitis B or C
+✅ Heavy alcohol use
+✅ Obesity or diabetes"""
+    
+    # ==========================================
+    # RISK FACTORS
+    # ==========================================
+    elif 'risk factor' in msg or 'what cause' in msg or 'causes of liver' in msg:
+        return """⚠️ Liver Disease Risk Factors:
+
+Lifestyle Factors:
+🔴 Heavy alcohol consumption (>2 drinks/day men, >1 women)
+🔴 Obesity (BMI >30)
+🔴 Poor diet (high sugar, saturated fat)
+🔴 Lack of exercise
+🔴 Unprotected sex (hepatitis B, C risk)
+🔴 IV drug use (sharing needles)
+
+Medical Conditions:
+🔴 Type 2 diabetes
+🔴 High cholesterol
+🔴 High triglycerides
+🔴 Metabolic syndrome
+🔴 Autoimmune diseases
+
+Infections
+🔴 Hepatitis B virus
+🔴 Hepatitis C virus
+🔴 Hepatitis D virus
+
+Toxins & Medications:
+🔴 Acetaminophen overdose
+🔴 Long-term use of certain medications
+🔴 Herbal supplements (some can harm liver)
+🔴 Aflatoxins (moldy food)
+🔴 Industrial chemicals
+
+Genetic Factors:
+🔴 Hemochromatosis (iron buildup)
+🔴 Wilson's disease (copper buildup)
+🔴 Alpha-1 antitrypsin deficiency
+🔴 Family history of liver disease
+
+Other Factors:
+🔴 Age (risk increases with age)
+🔴 Tattoos/piercings with unsterile equipment
+🔴 Blood transfusions before 1992
+🔴 Work exposure to toxins
+
+High-Risk Groups:
+- People with chronic hepatitis
+- Heavy drinkers (>10 years)
+- People with diabetes + obesity
+- Healthcare workers (needle stick risk)"""
+    
+    # ==========================================
+    # MISCELLANEOUS
+    # ==========================================
+    elif 'thank' in msg or 'thanks' in msg:
+        return '😊 You\'re welcome! Feel free to ask if you have more questions about liver health or our website. Stay healthy!'
+    
+    elif 'help' in msg or 'what can you do' in msg or 'options' in msg:
+        return """🤖 I can help you with:
+
+Liver Health Topics:
+- Liver diseases (fatty liver, hepatitis, cirrhosis, etc.)
+- Blood test parameters & normal ranges
+- Symptoms & warning signs
+- Treatment options
+- Diet & nutrition recommendations
+- Prevention strategies
+- Risk factors
+
+Website Features:
+- How to use LiverAI
+- Blood test analysis
+- Image scan predictions
+- Booking appointments
+- Understanding your results
+- User dashboard features
+- Admin panel functions
+
+Medical Information:
+- Diagnostic tests
+- Medications & treatments
+- When to see a doctor
+- Emergency warning signs
+
+Just type your question and I'll do my best to help! 😊"""
+    
+    elif 'emergency' in msg or 'urgent' in msg or 'hospital' in msg or 'when to go' in msg:
+        return """🚨 WHEN TO SEEK IMMEDIATE MEDICAL HELP:
+
+Call Emergency Services (911) if you have:
+🚨 Severe abdominal pain
+🚨 Vomiting blood or blood in vomit
+🚨 Black, tarry stools (internal bleeding)
+🚨 Severe confusion or disorientation
+🚨 Difficulty staying awake
+🚨 Difficulty breathing
+🚨 Sudden severe swelling in abdomen/legs
+🚨 Seizures
+
+Go to ER Soon if you have:
+⚠️ Yellowing of skin/eyes (jaundice)
+⚠️ Severe itching all over body
+⚠️ Very dark urine (like cola)
+⚠️ Very pale/white stools
+⚠️ Unexplained bruising/bleeding
+⚠️ Swollen abdomen with pain
+
+Note: This chatbot is for information only. In emergencies, always seek immediate medical attention!"""
+    
+    elif 'doctor' in msg or 'specialist' in msg or 'hepatologist' in msg or 'when to see' in msg:
+        return """👨‍⚕️ When to See a Liver Specialist:
+
+See a Hepatologist (Liver Specialist) if:
+- Diagnosed with chronic hepatitis B or C
+- Cirrhosis or advanced fibrosis
+- Elevated liver enzymes for >6 months
+- Suspected liver cancer
+- Considering liver transplant
+- Autoimmune liver disease
+- Genetic liver disorders
+
+See a Gastroenterologist if:
+- Digestive issues + liver concerns
+- Fatty liver disease
+- Bile duct problems
+- Need endoscopy or colonoscopy
+
+See a General Physician first if:
+- Mild symptoms
+- First-time abnormal blood tests
+- Prevention & screening
+- They can refer you to specialists
+
+What to Bring to Appointment:
+📋 All test results (blood, imaging)
+📋 List of medications & supplements
+📋 Family medical history
+📋 List of symptoms & when they started
+📋 Questions written down"""
+    
+    # ==========================================
+    # DEFAULT RESPONSE
+    # ==========================================
     else:
-        return """I'm not sure about that. You can ask me about:
+        return """I'm here to help! You can ask me about:
 
-• Normal blood test ranges
-• Liver diseases
-• Booking appointments
-• Symptoms
-• Diet recommendations
+📊 Blood Tests - Normal ranges, what they mean
+🏥 Liver Diseases - Symptoms, causes, treatments
+💊 Medications - Treatment options
+🍎 Diet & Nutrition- What to eat for healthy liver
+⚠️ Symptoms - Warning signs
+📅 Appointments - How to book with specialists
+🌐 Website- How to use LiverAI platform
+🔬 Diagnostic Tests - What tests you may need
 
-Or type 'help' for more options."""
+Or type 'help' to see all available topics!"""
 
 # 4. VIEW USER'S APPOINTMENTS
 @app.route("/my_appointments")
@@ -3014,5 +3894,6 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)
+
 
 
