@@ -32,18 +32,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
+
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get("EMAIL_USER")
-app.config['MAIL_PASSWORD'] = os.environ.get("EMAIL_PASS")
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("EMAIL_USER")
-#app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-#app.config['MAIL_PORT'] = 587
-#app.config['MAIL_USE_TLS'] = True
-#app.config['MAIL_USERNAME'] = 'pavithra22123@gmail.com'
-#app.config['MAIL_PASSWORD'] = 'hoib naas ohya rbob'
-#app.config['MAIL_DEFAULT_SENDER'] = 'pavithra22123@gmail.com'
+app.config['MAIL_USERNAME'] = 'pavithra22123@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hoib naas ohya rbob'
+app.config['MAIL_DEFAULT_SENDER'] = 'pavithra22123@gmail.com'
 
 
 mail = Mail(app)
@@ -3902,6 +3897,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)
+
 
 
 
